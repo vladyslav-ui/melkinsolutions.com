@@ -1,0 +1,128 @@
+<style>
+    /* Dark Mocha Branding & Typography */
+    :root {
+        --mocha-bg: #1B110D; /* Rich Dark Mocha */
+        --accent-gold: #FFC107;
+        --status-green: #00FF41;
+        --text-light: #F5F5F5;
+    }
+
+    .melkin-header-wrapper {
+        background-color: var(--mocha-bg);
+        border-bottom: 1px solid rgba(255, 193, 7, 0.2);
+        padding: 20px 0 15px 0;
+        font-family: "Palatino", "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        position: relative;
+    }
+
+    /* Requirement 1: Centered Logo Link to Homepage */
+    .header-logo-container {
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+    .header-logo-container img {
+        height: 65px; /* Medium Size adjustment */
+        width: auto;
+        transition: transform 0.3s ease;
+    }
+
+    .header-logo-container img:hover {
+        transform: scale(1.02);
+    }
+
+    /* Requirement 6: System Status Animation */
+    .status-indicator {
+        position: absolute;
+        right: -30px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 10px;
+        height: 10px;
+        background-color: var(--status-green);
+        border-radius: 50%;
+        box-shadow: 0 0 8px var(--status-green);
+        animation: pulseStatus 2s infinite;
+    }
+
+    @keyframes pulseStatus {
+        0% { opacity: 1; transform: translateY(-50%) scale(1); }
+        50% { opacity: 0.4; transform: translateY(-50%) scale(1.2); }
+        100% { opacity: 1; transform: translateY(-50%) scale(1); }
+    }
+
+    /* Requirement 2 & 3: Navigation Sequence below Logo */
+    .main-nav {
+        display: flex;
+        gap: 40px;
+        align-items: center;
+    }
+
+    .nav-item {
+        text-decoration: none;
+        color: var(--text-light);
+        font-size: 1.1rem;
+        letter-spacing: 0.5px;
+        transition: color 0.3s ease;
+    }
+
+    .nav-item:hover {
+        color: var(--accent-gold);
+    }
+
+    /* Palatino Bold for specifically called out items */
+    .bold-nav {
+        font-weight: bold;
+    }
+
+    /* Requirement 5: Contact Link Styling */
+    .contact-link {
+        color: var(--accent-gold);
+        border: 1px solid var(--accent-gold);
+        padding: 5px 15px;
+        margin-left: 20px;
+        transition: all 0.3s ease;
+    }
+
+    .contact-link:hover {
+        background-color: var(--accent-gold);
+        color: var(--mocha-bg);
+    }
+
+    /* Mobile handling - keeps it centered */
+    @media (max-width: 768px) {
+        .main-nav {
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    }
+</style>
+
+<header class="melkin-header-wrapper">
+    <div class="header-logo-container">
+        <a href="index.html">
+            <img src="assets/icons/melkin-logo-primary-no-bg.png" alt="MELKIN Underground & Confined Spaces Solutions">
+        </a>
+        <div class="status-indicator" title="SYSTEM ACTIVE"></div>
+    </div>
+
+    <nav class="main-nav">
+        <a href="industries.html" class="nav-item">Industries</a>
+        <a href="services.html" class="nav-item">Services</a>
+        
+        <a href="hages.html" class="nav-item bold-nav">HAGES</a>
+        
+        <a href="technology.html" class="nav-item">Technology</a>
+        <a href="benefits.html" class="nav-item">Benefits</a>
+        
+        <a href="contact.html" class="nav-item contact-link bold-nav">Contact MELKIN</a>
+    </nav>
+</header>
