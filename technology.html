@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HAGES | Hybrid Architecture Deep Dive</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       GLOBAL STYLES
+       ========================================================================== */
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #050505;
+      color: #ffffff;
+      font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+      overflow-x: hidden;
+    }
+
+    section {
+      position: relative;
+      width: 100%;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    /* Terminal Highlights & Tags */
+    .txt-gold { color: #FFC107; font-weight: bold; font-family: 'Courier New', Courier, monospace; }
+    .txt-red { color: #E53935; font-weight: bold; font-family: 'Courier New', Courier, monospace; }
+    .txt-cyan { color: #00E5FF; font-weight: bold; font-family: 'Courier New', Courier, monospace; }
+    .txt-green { color: #00E676; font-weight: bold; font-family: 'Courier New', Courier, monospace; }
+    
+    .panel-tag {
+      display: inline-block; font-family: 'Courier New', Courier, monospace; font-size: 0.85rem;
+      font-weight: bold; text-transform: uppercase; padding: 6px 12px; margin-bottom: 20px; letter-spacing: 1px;
+    }
+    .tag-red { color: #E53935; background: rgba(229, 57, 53, 0.1); border: 1px solid rgba(229, 57, 53, 0.2); }
+    .tag-gold { color: #FFC107; background: rgba(255, 193, 7, 0.1); border: 1px solid rgba(255, 193, 7, 0.2); }
+    .tag-cyan { color: #00E5FF; background: rgba(0, 229, 255, 0.1); border: 1px solid rgba(0, 229, 255, 0.2); }
+    .tag-green { color: #00E676; background: rgba(0, 230, 118, 0.1); border: 1px solid rgba(0, 230, 118, 0.2); }
+
+    /* CRT Scanline Overlay */
+    .crt-overlay::before {
+      content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.015), rgba(0, 255, 0, 0.005), rgba(0, 0, 255, 0.015));
+      z-index: 0; background-size: 100% 4px, 6px 100%; pointer-events: none; opacity: 0.6;
+    }
+    .z-content { position: relative; z-index: 2; }
+
+    /* ==========================================================================
+       SECTION 1: HERO
+       ========================================================================== */
+    .tech-hero {
+      position: relative;
+      background: linear-gradient(180deg, rgba(10,10,10,0.9) 0%, rgba(5,5,5,1) 100%);
+      padding: 120px 40px; min-height: 40vh;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      text-align: center;
+      border-bottom: 1px solid #333;
+      margin-top: 80px; /* Space for the fixed header */
+    }
+
+    .hero-kicker {
+      font-family: 'Courier New', Courier, monospace; color: #00E5FF; font-size: 1rem;
+      letter-spacing: 4px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
+    }
+    .hero-kicker::before {
+      content: ''; display: inline-block; width: 10px; height: 10px; background-color: #00E5FF;
+      box-shadow: 0 0 12px #00E5FF; animation: pulse-cyan 1.5s infinite;
+    }
+    @keyframes pulse-cyan { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.8); } }
+
+    .hero-headline {
+      font-family: 'Courier New', Courier, monospace; font-size: clamp(2.5rem, 5vw, 5rem);
+      font-weight: 900; letter-spacing: -2px; margin: 0 0 20px 0; text-transform: uppercase; line-height: 1.1;
+    }
+
+    .hero-subhead {
+      font-size: clamp(1.1rem, 2vw, 1.3rem); line-height: 1.6; color: #a0a0a0;
+      max-width: 800px;
+    }
+
+    /* ==========================================================================
+       SECTION 2: THE ARCHITECTURE STACK
+       ========================================================================== */
+    .tech-stack-container { max-width: 1000px; margin: 80px auto; padding: 20px; position: relative; }
+    
+    /* Central Data Line */
+    .tech-stack-container::before {
+      content: ''; position: absolute; left: 50%; top: 0; bottom: 0; width: 2px;
+      background: linear-gradient(to bottom, #00E5FF 0%, #FFC107 50%, #E53935 100%);
+      transform: translateX(-50%); z-index: 1; opacity: 0.5;
+    }
+    @media (max-width: 800px) { .tech-stack-container::before { left: 20px; } }
+
+    .stack-layer {
+      position: relative; width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 60px; z-index: 2;
+    }
+    .stack-layer:nth-child(even) { flex-direction: row-reverse; }
+    @media (max-width: 800px) { .stack-layer, .stack-layer:nth-child(even) { flex-direction: column; align-items: flex-start; padding-left: 50px; } }
+
+    /* The Center Node */
+    .layer-node {
+      position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+      width: 24px; height: 24px; background: #050505; border: 4px solid #fff; border-radius: 50%; z-index: 3;
+      transition: all 0.3s ease;
+    }
+    .stack-layer:hover .layer-node { transform: translate(-50%, -50%) scale(1.3); box-shadow: 0 0 15px rgba(255,255,255,0.5); }
+    @media (max-width: 800px) { .layer-node { left: 20px; top: 40px; } }
+
+    .layer-panel {
+      width: 45%; background: rgba(14, 14, 14, 0.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08); padding: 40px; border-radius: 4px;
+      transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
+    }
+    @media (max-width: 800px) { .layer-panel { width: 100%; box-sizing: border-box; } }
+
+    .layer-panel:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.8); }
+
+    /* Layer Specific Colors */
+    .layer-1 .layer-node { border-color: #00E5FF; }
+    .layer-1 .layer-panel { border-top: 4px solid #00E5FF; }
+    .layer-1:hover .layer-panel { border-color: rgba(0, 229, 255, 0.5); box-shadow: 0 15px 35px rgba(0,0,0,0.8), inset 0 0 30px rgba(0, 229, 255, 0.05); }
+
+    .layer-2 .layer-node { border-color: #00E676; }
+    .layer-2 .layer-panel { border-top: 4px solid #00E676; }
+    .layer-2:hover .layer-panel { border-color: rgba(0, 230, 118, 0.5); box-shadow: 0 15px 35px rgba(0,0,0,0.8), inset 0 0 30px rgba(0, 230, 118, 0.05); }
+
+    .layer-3 .layer-node { border-color: #FFC107; }
+    .layer-3 .layer-panel { border-top: 4px solid #FFC107; }
+    .layer-3:hover .layer-panel { border-color: rgba(255, 193, 7, 0.5); box-shadow: 0 15px 35px rgba(0,0,0,0.8), inset 0 0 30px rgba(255, 193, 7, 0.05); }
+
+    .layer-4 .layer-node { border-color: #E53935; }
+    .layer-4 .layer-panel { border-top: 4px solid #E53935; }
+    .layer-4:hover .layer-panel { border-color: rgba(229, 57, 53, 0.5); box-shadow: 0 15px 35px rgba(0,0,0,0.8), inset 0 0 30px rgba(229, 57, 53, 0.05); }
+
+    .layer-label { font-family: 'Courier New', Courier, monospace; font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; display: block; color: #888; }
+    .layer-title { font-family: 'Courier New', Courier, monospace; font-size: 1.8rem; font-weight: 900; margin: 0 0 15px 0; color: #fff; text-transform: uppercase; }
+    .layer-desc { font-size: 1.05rem; line-height: 1.7; color: #ccc; margin: 0 0 20px 0; }
+
+    /* Specification Data Grid inside Panels */
+    .spec-data { display: grid; grid-template-columns: 1fr; gap: 15px; border-top: 1px dashed #333; padding-top: 20px; }
+    .s-row { display: flex; justify-content: space-between; align-items: center; }
+    .s-key { font-size: 0.85rem; color: #aaa; text-transform: uppercase; }
+    .s-val { font-family: 'Courier New', Courier, monospace; font-weight: bold; color: #fff; text-align: right; }
+
+  </style>
+</head>
+<body>
+
+  <div id="header-placeholder"></div>
+
+  <section id="tech-hero">
+    <div class="tech-hero crt-overlay">
+      <div class="z-content">
+        <span class="hero-kicker">SYS_ARCH // HYBRID_OPERATING_SYSTEM</span>
+        <h1 class="hero-headline">Deep Dive:<br>Hybrid Architecture</h1>
+        <p class="hero-subhead">
+          A four-layer operational stack combining cutting-edge SLAM perception, aerial agility, persistent ground mobility, and decision-ready data intelligence.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="tech-stack">
+    <div class="tech-stack-container">
+
+      <div class="stack-layer layer-1">
+        <div class="layer-node"></div>
+        <div class="layer-panel crt-overlay">
+          <div class="z-content">
+            <span class="panel-tag tag-cyan">LAYER_01</span>
+            <span class="layer-label">PERCEPTION & AUTONOMY</span>
+            <h3 class="layer-title">Emesent Hovermap ST-X</h3>
+            <p class="layer-desc">The core intelligence of the system. Operating in GPS-denied environments, the Hovermap ST-X utilizes SLAM (Simultaneous Localization and Mapping) to actively build a 3D map of its surroundings, enabling omnidirectional collision avoidance and autonomous path planning.</p>
+            <div class="spec-data">
+              <div class="s-row">
+                <span class="s-key">Sensors</span>
+                <span class="s-val">32 Lasers, 3 Returns</span>
+              </div>
+              <div class="s-row">
+                <span class="s-key">Max Range</span>
+                <span class="s-val">0.5 to 300 m</span>
+              </div>
+              <div class="s-row">
+                <span class="s-key">Cloud-to-Cloud Accuracy</span>
+                <span class="s-val">6.7mm at 1-sigma</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="width: 45%;"></div> </div>
+
+      <div class="stack-layer layer-2">
+        <div class="layer-node"></div>
+        <div class="layer-panel crt-overlay">
+          <div class="z-content">
+            <span class="panel-tag tag-green">LAYER_02</span>
+            <span class="layer-label">AERIAL AGILITY</span>
+            <h3 class="layer-title">DJI Matrice 350 RTK</h3>
+            <p class="layer-desc">The agility asset. Built for high-consequence industrial deployments, the M350 acts as the aerial vehicle carrying the Hovermap payload into confined voids and complex geometries.</p>
+            <div class="spec-data">
+              <div class="s-row">
+                <span class="s-key">Max Flight Time</span>
+                <span class="s-val">Up to 55 minutes</span>
+              </div>
+              <div class="s-row">
+                <span class="s-key">Ingress Protection</span>
+                <span class="s-val">IP55</span>
+              </div>
+              <div class="s-row">
+                <span class="s-key">Sensing</span>
+                <span class="s-val">Six-Directional Sensing</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="width: 45%;"></div>
+      </div>
+
+      <div class="stack-layer layer-3">
+        <div class="layer-node"></div>
+        <div class="layer-panel crt-overlay">
+          <div class="z-content">
+            <span class="panel-tag tag-gold">LAYER_03</span>
+            <span class="layer-label">GROUND PERSISTENCE</span>
+            <h3 class="layer-title">Overlander-T Crawler</h3>
+            <p class="layer-desc">The solution to the "Endurance Wall." The tracked mobile base transports the drone deep into environments, bypassing UAV flight limits. The rover provides physical mounting for the HEISHA DPad auto-charging station, allowing the UAV to wirelessly recharge mid-mission without human intervention.</p>
+            <div class="spec-data">
+              <div class="s-row">
+                <span class="s-key">Payload Capacity</span>
+                <span class="s-val">25 lbs (11.3 kg)</span>
+              </div>
+              <div class="s-row">
+                <span class="s-key">Max Speed & Runtime</span>
+                <span class="s-val">2.3 mph / ~45 mins</span>
+              </div>
+              <div class="s-row">
+                <span class="s-key">Traction</span>
+                <span class="s-val">48mm Badlands Tank-Tracks</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="width: 45%;"></div>
+      </div>
+
+      <div class="stack-layer layer-4">
+        <div class="layer-node"></div>
+        <div class="layer-panel crt-overlay">
+          <div class="z-content">
+            <span class="panel-tag tag-red">LAYER_04</span>
+            <span class="layer-label">DATA PROCESSING</span>
+            <h3 class="layer-title">Emesent Aura</h3>
+            <p class="layer-desc">The intelligence engine. While onboard processing can generate quick, locally correct point clouds in ~80 seconds, Emesent Aura utilizes global optimization algorithms to produce high-resolution, survey-grade deliverables across the entire mission trajectory.</p>
+            <div class="spec-data">
+              <div class="s-row">
+                <span class="s-key">Onboard Processing Time</span>
+                <span class="s-val">~80s (for 15 min mission)</span>
+              </div>
+              <div class="s-row">
+                <span class="s-key">Aura Processing Time</span>
+                <span class="s-val">~1,200s (for 15 min mission)</span>
+              </div>
+              <div class="s-row">
+                <span class="s-key">Aura Accuracy</span>
+                <span class="s-val">Global SLAM Optimization</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="width: 45%;"></div>
+      </div>
+
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+
+  <script>
+    function loadComponent(id, file) {
+      fetch(file)
+        .then(response => {
+          if (!response.ok) throw new Error("Network response was not ok");
+          return response.text();
+        })
+        .then(data => document.getElementById(id).innerHTML = data)
+        .catch(error => console.error("Error loading component:", error));
+    }
+
+    // Fire the injection
+    loadComponent('header-placeholder', 'components/header.html');
+    loadComponent('footer-placeholder', 'components/footer.html');
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HAGES | Persistent Autonomous Inspection</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       GLOBAL STYLES (To be moved to /assets/css/main.css)
+       ========================================================================== */
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #050505; /* Deep tactical black default */
+      color: #ffffff;
+      font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+      overflow-x: hidden;
+    }
+
+    section {
+      position: relative;
+      width: 100%;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    /* Terminal Highlights & Tags */
+    .highlight-gold { color: #FFC107; font-weight: bold; font-family: 'Courier New', Courier, monospace; }
+    .highlight-red { color: #E53935; font-weight: bold; font-family: 'Courier New', Courier, monospace; }
+    .highlight-green { color: #00E676; font-weight: bold; font-family: 'Courier New', Courier, monospace; }
+    
+    .panel-tag {
+      display: inline-block; font-family: 'Courier New', Courier, monospace; font-size: 0.85rem;
+      font-weight: bold; text-transform: uppercase; padding: 6px 12px; margin-bottom: 20px; letter-spacing: 1px;
+    }
+    .tag-red { color: #E53935; background: rgba(229, 57, 53, 0.1); border: 1px solid rgba(229, 57, 53, 0.2); }
+    .tag-gold { color: #FFC107; background: rgba(255, 193, 7, 0.1); border: 1px solid rgba(255, 193, 7, 0.2); }
+    .tag-cyan { color: #00E5FF; background: rgba(0, 229, 255, 0.1); border: 1px solid rgba(0, 229, 255, 0.2); }
+
+    /* CRT Scanline Overlay for Panels */
+    .crt-overlay::before {
+      content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.015), rgba(0, 255, 0, 0.005), rgba(0, 0, 255, 0.015));
+      z-index: 0; background-size: 100% 4px, 6px 100%; pointer-events: none; opacity: 0.6;
+    }
+
+    /* ==========================================================================
+       SECTION 1: HERO
+       ========================================================================== */
+    .hages-hero {
+      position: relative;
+      background-color: rgba(10, 10, 10, 0.8); 
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      padding: 150px 40px; min-height: 75vh;
+      display: flex; flex-direction: column; justify-content: center;
+      border-bottom: 2px solid #FFC107;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
+      margin-top: 80px; /* Space for the fixed header */
+    }
+
+    .scan-line {
+      position: absolute; top: 0; left: 0; width: 100%; height: 3px;
+      background-color: rgba(255, 193, 7, 0.6); box-shadow: 0 0 25px rgba(255, 193, 7, 1);
+      animation: scan 5s ease-in-out infinite; z-index: 1;
+    }
+    @keyframes scan { 0% { top: 0; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
+
+    .hero-content {
+      position: relative; z-index: 2; max-width: 1200px; margin: 0 auto; text-align: left;
+    }
+
+    .hero-kicker {
+      font-family: 'Courier New', Courier, monospace; color: #FFC107; font-size: 1rem;
+      letter-spacing: 4px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
+    }
+    .hero-kicker::before {
+      content: ''; display: inline-block; width: 10px; height: 10px; background-color: #FFC107;
+      box-shadow: 0 0 12px #FFC107; animation: pulse-gold 1.5s infinite;
+    }
+    @keyframes pulse-gold { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.8); } }
+
+    .hero-headline {
+      font-family: 'Courier New', Courier, monospace; font-size: clamp(3rem, 6vw, 5.5rem);
+      font-weight: 900; letter-spacing: -2px; margin: 0 0 30px 0; text-transform: uppercase; line-height: 1.05; text-shadow: 0 5px 20px rgba(0,0,0,0.8);
+    }
+
+    .hero-subhead {
+      font-size: clamp(1.1rem, 2vw, 1.4rem); line-height: 1.6; color: #d0d0d0;
+      max-width: 800px; margin-bottom: 50px; border-left: 4px solid #444; padding-left: 20px;
+    }
+
+    /* ==========================================================================
+       SECTION 2: THE PROBLEM (Bento Grid)
+       ========================================================================== */
+    .hages-problem { max-width: 1200px; margin: 100px auto; padding: 20px; }
+
+    .section-header { margin-bottom: 50px; text-align: center; }
+    .section-title {
+      font-family: 'Courier New', Courier, monospace; font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 900; text-transform: uppercase; letter-spacing: -1px; margin: 0 0 15px 0;
+    }
+    .section-sub { font-size: 1.15rem; color: #aaa; max-width: 700px; margin: 0 auto; line-height: 1.6;}
+
+    .bento-grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: minmax(250px, auto); gap: 25px; }
+    @media (max-width: 950px) { .bento-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 650px) { .bento-grid { grid-template-columns: 1fr; } }
+
+    .bento-panel {
+      background: rgba(14, 14, 14, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08); padding: 40px; position: relative; overflow: hidden;
+      transition: transform 0.4s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .bento-content { position: relative; z-index: 2; }
+    
+    .panel-fatality { grid-column: span 1; grid-row: span 2; border-top: 4px solid #E53935; }
+    .panel-compliance { grid-column: span 2; border-top: 4px solid #FFC107; }
+    .panel-cost { grid-column: span 2; background: rgba(229, 57, 53, 0.02); border: 1px solid rgba(229, 57, 53, 0.15); }
+    @media (max-width: 950px) { .panel-fatality, .panel-compliance, .panel-cost { grid-column: span 2; grid-row: span 1; } }
+
+    .bento-panel:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.8); }
+    .panel-fatality:hover { border-color: rgba(229, 57, 53, 0.5); }
+    .panel-compliance:hover { border-color: rgba(255, 193, 7, 0.5); }
+    
+    .bento-panel h3 { font-family: 'Courier New', Courier, monospace; font-size: 1.8rem; text-transform: uppercase; margin: 0 0 20px 0; }
+    .bento-panel p { font-size: 1.05rem; line-height: 1.7; color: #cccccc; margin: 0 0 20px 0; }
+    .bento-panel p:last-child { margin-bottom: 0; }
+
+    /* ==========================================================================
+       SECTION 3: THE HYBRID SOLUTION
+       ========================================================================== */
+    .hages-solution {
+      background: rgba(10, 10, 10, 0.95); border-top: 1px solid #333; border-bottom: 1px solid #333;
+      padding: 100px 20px;
+    }
+    .solution-container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+    @media (max-width: 900px) { .solution-container { grid-template-columns: 1fr; } }
+
+    .sol-kicker { font-family: 'Courier New', Courier, monospace; color: #00E5FF; font-size: 0.9rem; letter-spacing: 2px; margin-bottom: 15px; display: block;}
+    .sol-headline { font-family: 'Courier New', Courier, monospace; font-size: 3rem; font-weight: 900; margin: 0 0 25px 0; text-transform: uppercase; line-height: 1.1; }
+    .sol-body { font-size: 1.15rem; line-height: 1.8; color: #bbb; margin-bottom: 30px; }
+
+    .spec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; border-top: 1px dashed #444; padding-top: 30px; }
+    .spec-item { background: rgba(255,255,255,0.02); padding: 15px; border-left: 3px solid #00E5FF; }
+    .spec-val { display: block; font-family: 'Courier New', Courier, monospace; font-size: 1.4rem; font-weight: bold; color: #ffffff; margin-bottom: 5px; }
+    .spec-lab { font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+
+    .endurance-box {
+      background: #050505; border: 1px solid #333; padding: 40px; position: relative;
+      box-shadow: inset 0 0 50px rgba(0,0,0,0.8);
+    }
+    .endurance-title { font-family: 'Courier New', Courier, monospace; color: #FFC107; margin-bottom: 20px; font-size: 1.2rem; }
+    .endurance-stat { display: flex; justify-content: space-between; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #222; }
+    .endurance-stat:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .e-name { font-size: 1rem; color: #aaa; }
+    .e-num { font-family: 'Courier New', Courier, monospace; font-size: 1.2rem; font-weight: bold; }
+
+    /* ==========================================================================
+       SECTION 4: ECONOMICS
+       ========================================================================== */
+    .hages-economics { max-width: 1200px; margin: 100px auto; padding: 20px; }
+    
+    .econ-banner {
+      display: flex; justify-content: space-between; align-items: stretch; flex-wrap: wrap;
+      background: rgba(14, 14, 14, 0.9); border: 1px solid #333;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+    .econ-half { flex: 1 1 400px; padding: 60px 40px; }
+    .econ-trad { border-right: 1px solid #333; border-top: 4px solid #E53935; }
+    .econ-hages { background: rgba(0, 230, 118, 0.02); border-top: 4px solid #00E676; }
+
+    .econ-label { font-family: 'Courier New', Courier, monospace; font-size: 1rem; color: #888; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; display: block; }
+    .econ-cost { font-family: 'Courier New', Courier, monospace; font-size: clamp(3.5rem, 6vw, 5rem); font-weight: 900; margin: 0 0 20px 0; line-height: 1; }
+    .cost-red { color: #E53935; text-shadow: 0 0 20px rgba(229, 57, 53, 0.3); }
+    .cost-green { color: #00E676; text-shadow: 0 0 20px rgba(0, 230, 118, 0.3); }
+    
+    .econ-breakdown { list-style: none; padding: 0; margin: 0; }
+    .econ-breakdown li { display: flex; justify-content: space-between; font-size: 0.95rem; color: #aaa; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px dashed #222; }
+    .econ-breakdown li span:last-child { font-family: 'Courier New', Courier, monospace; color: #fff; }
+
+    /* ==========================================================================
+       SECTION 5: FOOTER CTA
+       ========================================================================== */
+    .hages-cta { text-align: center; padding: 100px 20px; border-top: 1px solid #222; }
+    .cta-status { font-family: 'Courier New', Courier, monospace; color: #FFC107; margin-bottom: 20px; font-size: 1rem; }
+    .cta-headline { font-family: 'Courier New', Courier, monospace; font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; text-transform: uppercase; margin: 0 0 40px 0; }
+    .cta-btn-group { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      background: #FFC107; color: #000; padding: 20px 40px; font-family: 'Courier New', Courier, monospace; font-weight: bold; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; box-shadow: 4px 4px 0 #fff; transition: all 0.2s;
+    }
+    .btn-primary:hover { transform: translate(2px, 2px); box-shadow: 2px 2px 0 #fff; }
+    .btn-secondary {
+      background: transparent; color: #fff; border: 2px solid #555; padding: 20px 40px; font-family: 'Courier New', Courier, monospace; font-weight: bold; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; transition: all 0.2s;
+    }
+    .btn-secondary:hover { border-color: #fff; }
+
+  </style>
+</head>
+<body>
+
+  <div id="header-placeholder"></div>
+
+  <section id="home-hero">
+    <div class="hages-hero crt-overlay">
+      <div class="scan-line"></div>
+      
+      <div class="hero-content">
+        <span class="hero-kicker">SYS_ONLINE // HAGES_CORE_ARCHITECTURE</span>
+        <h1 class="hero-headline">Persistent<br>Autonomous<br>Inspection</h1>
+        <p class="hero-subhead">
+          We engineer and deploy the Hybrid Aerial & Ground Explorer System (HAGES) into high-consequence underground and confined spaces, eliminating human exposure while drastically cutting operational downtime.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="home-problem">
+    <div class="hages-problem">
+      
+      <div class="section-header">
+        <h2 class="section-title">The Operational Reality</h2>
+        <p class="section-sub">Across global infrastructure, manual structural assessment remains dangerous, inconsistent, and prohibitively expensive.</p>
+      </div>
+
+      <div class="bento-grid">
+        
+        <div class="bento-panel panel-fatality crt-overlay">
+          <div class="bento-content">
+            <span class="panel-tag tag-red">LETHAL_HAZARD</span>
+            <h3>People Are Still Dying to Do This Work</h3>
+            <p>Between 2019 and 2023, U.S. mining fatalities trended upward to <span class="highlight-red">40 deaths per year</span>, heavily driven by ground falls and explosions.</p>
+            <p>In municipal and industrial sectors, confined space entry accounts for <span class="highlight-red">~100 fatalities</span> and over 5,000 non-fatal incidents annually, primarily due to toxic gas and engulfment.</p>
+          </div>
+        </div>
+
+        <div class="bento-panel panel-compliance crt-overlay">
+          <div class="bento-content">
+            <span class="panel-tag tag-gold">INSPECTION_GAP</span>
+            <h3>Assets Are Operating Below Mandates</h3>
+            <p>Because traditional inspections are too hazardous and difficult to stage, high-consequence assets are failing to meet their required inspection frequencies. Sewer mains are currently operating at a <span class="highlight-gold">38% compliance rate</span>, and stormwater systems at a mere <span class="highlight-gold">27%</span>.</p>
+          </div>
+        </div>
+
+        <div class="bento-panel panel-cost crt-overlay">
+          <div class="bento-content">
+            <span class="panel-tag tag-red">COST_BARRIER</span>
+            <h3>The Price of Manual Entry</h3>
+            <p>The barrier to compliance isn't just safety; it is economics. A traditional confined-space inspection costs upwards of <span class="highlight-red">$122,000 per event</span>. This is driven primarily by <span class="highlight-red">$45,000</span> in forced asset downtime and <span class="highlight-red">$12,000</span> in mandatory OSHA rescue standby teams.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="home-solution">
+    <div class="hages-solution">
+      <div class="solution-container">
+        
+        <div class="sol-text">
+          <span class="sol-kicker">/// SHATTERING THE ENDURANCE WALL</span>
+          <h2 class="sol-headline">The Hybrid<br>Advantage</h2>
+          <p class="sol-body">
+            Standalone drones are perfect for stope mapping but hit an "Endurance Wall" at a range limit of ~150 meters. Conversely, standalone rovers suffer a 56% capability loss over 500 meters due to terrain limitations.
+          </p>
+          <p class="sol-body">
+            HAGES solves this by integrating the <strong>goBilda Overlander-T</strong> crawler and the <strong>DJI Matrice 350 RTK</strong>. The rover transports the drone deep underground, acts as a mobile launchpad, and provides wireless mid-mission recharging via the <strong>HEISHA DPad</strong> base.
+          </p>
+
+          <div class="spec-grid">
+            <div class="spec-item">
+              <span class="spec-val">500m+</span>
+              <span class="spec-lab">Deep Penetration Range</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-val">100%</span>
+              <span class="spec-lab">Human Entry Eliminated</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sol-data">
+          <div class="endurance-box crt-overlay">
+            <div class="endurance-title">> OPERATIONAL_CAPABILITY @ 500M</div>
+            
+            <div class="endurance-stat">
+              <span class="e-name">Standalone UAV Limit</span>
+              <span class="e-num highlight-red">FAIL @ 150m</span>
+            </div>
+            <div class="endurance-stat">
+              <span class="e-name">Standalone Rover Drop-off</span>
+              <span class="e-num highlight-gold">-56% Loss</span>
+            </div>
+            <div class="endurance-stat" style="border:none;">
+              <span class="e-name" style="color:#00E5FF; font-weight:bold;">HAGES Hybrid Architecture</span>
+              <span class="e-num" style="color:#00E5FF;">90% Retained</span>
+            </div>
+            <p style="font-size: 0.8rem; color: #666; margin-top: 20px; font-style: italic;">
+              *Data based on full 500m run metrics.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section id="home-economics">
+    <div class="hages-economics">
+      
+      <div class="section-header">
+        <h2 class="section-title">The Economic Shift</h2>
+        <p class="section-sub">HAGES changes the fundamental financial math of infrastructure management, compressing the inspection window and eliminating support costs.</p>
+      </div>
+
+      <div class="econ-banner">
+        
+        <div class="econ-half econ-trad crt-overlay">
+          <span class="econ-label">Traditional Method</span>
+          <h3 class="econ-cost cost-red">$122,000</h3>
+          <ul class="econ-breakdown">
+            <li><span>Plant/Asset Downtime</span> <span>$45,000</span></li>
+            <li><span>Labor (Crew + Hours)</span> <span>$18,000</span></li>
+            <li><span>Repeat Visits</span> <span>$14,000</span></li>
+            <li><span>Safety & Rescue Standby</span> <span>$12,000</span></li>
+            <li><span>Decision Delay (12 days)</span> <span>$12,000</span></li>
+          </ul>
+        </div>
+
+        <div class="econ-half econ-hages crt-overlay">
+          <span class="econ-label" style="color:#00E676;">HAGES Deployment</span>
+          <h3 class="econ-cost cost-green">$34,000</h3>
+          <ul class="econ-breakdown">
+            <li><span>Plant/Asset Downtime <span style="color:#00E676; font-size:0.8rem;">(51% Reduction)</span></span> <span>$22,000</span></li>
+            <li><span>Labor <span style="color:#00E676; font-size:0.8rem;">(No entry crew)</span></span> <span>$3,500</span></li>
+            <li><span>Repeat Visits <span style="color:#00E676; font-size:0.8rem;">(Eliminated)</span></span> <span>$500</span></li>
+            <li><span>Safety Standby <span style="color:#00E676; font-size:0.8rem;">(Eliminated)</span></span> <span>$2,000</span></li>
+            <li><span>Decision Delay <span style="color:#00E676; font-size:0.8rem;">(1-2 days)</span></span> <span>$1,500</span></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <p style="text-align: center; color: #a0a0a0; margin-top: 30px; font-family: 'Courier New', Courier, monospace;">
+        > RESULT: HAGES delivers a <span class="highlight-green">72% cost reduction</span> per inspection event.
+      </p>
+
+    </div>
+  </section>
+
+  <section id="home-cta">
+    <div class="hages-cta">
+      <div class="cta-status">> SYSTEM_READY // AWAITING_OPERATOR_INPUT</div>
+      <h2 class="cta-headline">Deploy Operational Intelligence</h2>
+      
+      <div class="cta-btn-group">
+        <a href="industries.html" class="btn-primary">Explore Industries</a>
+        <a href="technology.html" class="btn-secondary">View Technology</a>
+      </div>
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+
+  <script>
+    function loadComponent(id, file) {
+      fetch(file)
+        .then(response => {
+          if (!response.ok) throw new Error("Network response was not ok");
+          return response.text();
+        })
+        .then(data => document.getElementById(id).innerHTML = data)
+        .catch(error => console.error("Error loading component:", error));
+    }
+
+    // Fire the injection
+    loadComponent('header-placeholder', 'components/header.html');
+    loadComponent('footer-placeholder', 'components/footer.html');
+  </script>
+
+</body>
+</html>

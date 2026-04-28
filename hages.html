@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HAGES | Product Schematics</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       GLOBAL STYLES (To be moved to /assets/css/main.css later)
+       ========================================================================== */
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #050505;
+      color: #ffffff;
+      font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+      overflow-x: hidden;
+    }
+
+    section {
+      position: relative;
+      width: 100%;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    /* Terminal Highlights & Tags */
+    .txt-gold { color: #FFC107; font-weight: bold; font-family: 'Courier New', Courier, monospace; }
+    .txt-red { color: #E53935; font-weight: bold; font-family: 'Courier New', Courier, monospace; }
+    .txt-cyan { color: #00E5FF; font-weight: bold; font-family: 'Courier New', Courier, monospace; }
+    .txt-green { color: #00E676; font-weight: bold; font-family: 'Courier New', Courier, monospace; }
+    
+    .panel-tag {
+      display: inline-block; font-family: 'Courier New', Courier, monospace; font-size: 0.85rem;
+      font-weight: bold; text-transform: uppercase; padding: 6px 12px; margin-bottom: 20px; letter-spacing: 1px;
+    }
+    .tag-red { color: #E53935; background: rgba(229, 57, 53, 0.1); border: 1px solid rgba(229, 57, 53, 0.2); }
+    .tag-gold { color: #FFC107; background: rgba(255, 193, 7, 0.1); border: 1px solid rgba(255, 193, 7, 0.2); }
+    .tag-cyan { color: #00E5FF; background: rgba(0, 229, 255, 0.1); border: 1px solid rgba(0, 229, 255, 0.2); }
+    .tag-green { color: #00E676; background: rgba(0, 230, 118, 0.1); border: 1px solid rgba(0, 230, 118, 0.2); }
+
+    /* CRT Scanline Overlay */
+    .crt-overlay::before {
+      content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.015), rgba(0, 255, 0, 0.005), rgba(0, 0, 255, 0.015));
+      z-index: 0; background-size: 100% 4px, 6px 100%; pointer-events: none; opacity: 0.6;
+    }
+    .z-content { position: relative; z-index: 2; }
+
+    /* ==========================================================================
+       SECTION 1: HERO
+       ========================================================================== */
+    .product-hero {
+      position: relative;
+      background: linear-gradient(180deg, rgba(15,15,15,0.95) 0%, rgba(5,5,5,1) 100%);
+      padding: 120px 40px; min-height: 50vh;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      text-align: center; border-bottom: 1px solid #333;
+      margin-top: 80px; /* Space for the fixed header */
+    }
+
+    .hero-kicker {
+      font-family: 'Courier New', Courier, monospace; color: #00E5FF; font-size: 1rem;
+      letter-spacing: 4px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
+    }
+    .hero-kicker::before {
+      content: ''; display: inline-block; width: 10px; height: 10px; background-color: #00E5FF;
+      box-shadow: 0 0 12px #00E5FF; animation: pulse-cyan 1.5s infinite;
+    }
+    @keyframes pulse-cyan { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.8); } }
+
+    .hero-headline {
+      font-family: 'Courier New', Courier, monospace; font-size: clamp(3rem, 6vw, 5rem);
+      font-weight: 900; letter-spacing: -2px; margin: 0 0 20px 0; text-transform: uppercase; line-height: 1.1;
+    }
+
+    .hero-subhead {
+      font-size: clamp(1.1rem, 2vw, 1.3rem); line-height: 1.6; color: #a0a0a0; max-width: 900px;
+    }
+
+    /* ==========================================================================
+       SECTION 2: SYSTEM SCHEMATICS (Bento Grid)
+       ========================================================================== */
+    .system-schematics { max-width: 1250px; margin: 80px auto; padding: 20px; }
+    
+    .section-title { font-family: 'Courier New', Courier, monospace; font-size: 2.2rem; text-transform: uppercase; margin-bottom: 40px; border-left: 4px solid #fff; padding-left: 15px; }
+
+    /* Hardware Grid */
+    .hardware-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 80px;
+    }
+    @media (max-width: 950px) { .hardware-grid { grid-template-columns: 1fr; } }
+
+    /* Segment Panels */
+    .segment-panel {
+      background: rgba(14, 14, 14, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.05); padding: 40px; position: relative; overflow: hidden;
+    }
+    .segment-ground { border-top: 4px solid #FFC107; }
+    .segment-aerial { border-top: 4px solid #00E5FF; }
+
+    .segment-header { margin-bottom: 30px; border-bottom: 1px solid #333; padding-bottom: 20px; }
+    .segment-title { font-family: 'Courier New', Courier, monospace; font-size: 2rem; font-weight: 900; color: #fff; margin: 0 0 10px 0; text-transform: uppercase; }
+    .segment-desc { font-size: 1.05rem; color: #aaa; margin: 0; line-height: 1.6; }
+
+    /* Component List */
+    .component-list { display: flex; flex-direction: column; gap: 25px; }
+    
+    .component-item {
+      background: rgba(255, 255, 255, 0.02); border-left: 3px solid #444; padding: 20px; transition: all 0.3s ease;
+    }
+    .component-item:hover { background: rgba(255, 255, 255, 0.05); transform: translateX(5px); }
+    .segment-ground .component-item:hover { border-left-color: #FFC107; }
+    .segment-aerial .component-item:hover { border-left-color: #00E5FF; }
+
+    .comp-name { font-family: 'Courier New', Courier, monospace; font-size: 1.2rem; font-weight: bold; color: #fff; margin: 0 0 10px 0; text-transform: uppercase; }
+    .comp-detail { font-size: 0.95rem; color: #ccc; line-height: 1.6; margin: 0; }
+
+    /* Integration Banner */
+    .integration-banner {
+      background: rgba(10, 10, 10, 0.95); border: 1px solid #333; border-top: 4px solid #00E676;
+      padding: 40px; display: flex; flex-direction: column; align-items: center; text-align: center;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+    }
+    .int-title { font-family: 'Courier New', Courier, monospace; font-size: 1.8rem; color: #fff; text-transform: uppercase; margin: 0 0 15px 0; }
+    .int-desc { font-size: 1.1rem; color: #bbb; line-height: 1.7; max-width: 900px; margin: 0 0 30px 0; }
+    
+    .docking-stats { display: flex; gap: 30px; flex-wrap: wrap; justify-content: center; }
+    .dock-stat { background: rgba(0, 230, 118, 0.05); border: 1px solid rgba(0, 230, 118, 0.2); padding: 15px 25px; min-width: 200px; }
+    .dock-val { font-family: 'Courier New', Courier, monospace; font-size: 1.8rem; font-weight: bold; color: #00E676; display: block; margin-bottom: 5px; }
+    .dock-lab { font-size: 0.8rem; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+
+  </style>
+</head>
+<body>
+
+  <div id="header-placeholder"></div>
+
+  <section id="product-hero">
+    <div class="product-hero crt-overlay">
+      <div class="z-content">
+        <span class="hero-kicker">SYS_SPECIFICATION // HARDWARE_OVERVIEW</span>
+        <h1 class="hero-headline">HAGES 1.0</h1>
+        <p class="hero-subhead">
+          The Hybrid Aerial & Ground Explorer System. An integrated two-platform solution engineered specifically for high-consequence underground and confined space inspection.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="system-schematics">
+    <div class="system-schematics">
+      
+      <h2 class="section-title">Hardware Architecture</h2>
+
+      <div class="hardware-grid">
+        
+        <div class="segment-panel segment-ground crt-overlay">
+          <div class="z-content">
+            <div class="segment-header">
+              <span class="panel-tag tag-gold">GROUND_SEGMENT</span>
+              <h3 class="segment-title">The Rover Platform</h3>
+              <p class="segment-desc">A ruggedized, tracked mobile base designed to transport the aerial asset deep into the hazard zone and act as an active staging ground.</p>
+            </div>
+
+            <div class="component-list">
+              <div class="component-item">
+                <h4 class="comp-name">Foxtech Crawler Tracks</h4>
+                <p class="comp-detail">Plug-and-play crawler track system engineered for rough, uneven terrain and rocky surfaces. It provides the core mobility for the system without requiring complex custom integrations.</p>
+              </div>
+              
+              <div class="component-item">
+                <h4 class="comp-name">Rover Energy System</h4>
+                <p class="comp-detail">Powered by a 24V 30Ah LiFePO4 dual-battery pack, coupled with a DC-AC inverter. This high-capacity system drives ground operations while providing sufficient reserve power to recharge the UAV mid-mission.</p>
+              </div>
+
+              <div class="component-item">
+                <h4 class="comp-name">HEISHA DPad C500</h4>
+                <p class="comp-detail">Integrated onto the top of the rover, this platform acts as the landing and charging pad. It features black channels designed to physically align and lock the drone securely in place while the rover is in motion.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="segment-panel segment-aerial crt-overlay">
+          <div class="z-content">
+            <div class="segment-header">
+              <span class="panel-tag tag-cyan">AERIAL_SEGMENT</span>
+              <h3 class="segment-title">The UAV Platform</h3>
+              <p class="segment-desc">A highly specialized, autonomous quadcopter designed to launch from the rover, map complex 3D voids, and autonomously dock for recharging.</p>
+            </div>
+
+            <div class="component-list">
+              <div class="component-item">
+                <h4 class="comp-name">Custom Quadcopter Frame</h4>
+                <p class="comp-detail">Built around a Cube Orange+ Flight Controller and an ALPHA 40A ESC stack. It utilizes T-Motors MN5008 KV340 outrunners paired with P15x5 carbon fiber props—a pitch optimized for maximum flight efficiency at low RPMs in dusty, turbulent underground airflows.</p>
+              </div>
+              
+              <div class="component-item">
+                <h4 class="comp-name">Emesent Hovermap ST-X</h4>
+                <p class="comp-detail">The primary sensing payload. Provides GPS-denied SLAM navigation and 3D LiDAR mapping. Features a 32-channel scanner with a 300m range, capturing 1.92 million points per second with ±10mm accuracy underground. Enables fully autonomous flight without GPS infrastructure.</p>
+              </div>
+
+              <div class="component-item">
+                <h4 class="comp-name">HEISHA D60 Landing Gear</h4>
+                <p class="comp-detail">An ultra-lightweight (38g) wireless recharging landing gear system. It allows the drone to automatically align with the DPad C500 on the rover, executing autonomous landing, charging, and relaunching sequences with a lifespan of ≥5,000 fatigue cycles.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="integration-banner crt-overlay">
+        <div class="z-content">
+          <span class="panel-tag tag-green">SYSTEM_INTEGRATION</span>
+          <h3 class="int-title">The Mid-Mission Recharge Loop</h3>
+          <p class="int-desc">The core architectural claim of HAGES 1.0 is the successful integration of the rover and UAV systems. By enabling the drone to land on the crawler, securely lock into place, wirelessly recharge from the rover's energy system, and autonomously relaunch, HAGES shatters the endurance limitations of traditional single-mode robots.</p>
+          
+          <div class="docking-stats">
+            <div class="dock-stat">
+              <span class="dock-val">24V 30Ah</span>
+              <span class="dock-lab">Rover Power Reserve</span>
+            </div>
+            <div class="dock-stat">
+              <span class="dock-val">Auto-Align</span>
+              <span class="dock-lab">Docking Mechanism</span>
+            </div>
+            <div class="dock-stat">
+              <span class="dock-val">GPS-Denied</span>
+              <span class="dock-lab">Autonomous Flight</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+
+  <script>
+    function loadComponent(id, file) {
+      fetch(file)
+        .then(response => {
+          if (!response.ok) throw new Error("Network response was not ok");
+          return response.text();
+        })
+        .then(data => document.getElementById(id).innerHTML = data)
+        .catch(error => console.error("Error loading component:", error));
+    }
+
+    // Fire the injection
+    loadComponent('header-placeholder', 'components/header.html');
+    loadComponent('footer-placeholder', 'components/footer.html');
+  </script>
+
+</body>
+</html>

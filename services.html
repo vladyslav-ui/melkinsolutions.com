@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HAGES | Service Catalog</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       GLOBAL STYLES (To be moved to /assets/css/main.css later)
+       ========================================================================== */
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #050505;
+      color: #ffffff;
+      font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+      overflow-x: hidden;
+    }
+
+    section {
+      position: relative;
+      width: 100%;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    /* Terminal Highlights & Tags */
+    .txt-gold { color: #FFC107; font-weight: bold; font-family: 'Courier New', Courier, monospace; }
+    .txt-red { color: #E53935; font-weight: bold; font-family: 'Courier New', Courier, monospace; }
+    .txt-cyan { color: #00E5FF; font-weight: bold; font-family: 'Courier New', Courier, monospace; }
+    .txt-green { color: #00E676; font-weight: bold; font-family: 'Courier New', Courier, monospace; }
+    
+    .panel-tag {
+      display: inline-block; font-family: 'Courier New', Courier, monospace; font-size: 0.85rem;
+      font-weight: bold; text-transform: uppercase; padding: 6px 12px; margin-bottom: 20px; letter-spacing: 1px;
+    }
+    .tag-red { color: #E53935; background: rgba(229, 57, 53, 0.1); border: 1px solid rgba(229, 57, 53, 0.2); }
+    .tag-gold { color: #FFC107; background: rgba(255, 193, 7, 0.1); border: 1px solid rgba(255, 193, 7, 0.2); }
+    .tag-cyan { color: #00E5FF; background: rgba(0, 229, 255, 0.1); border: 1px solid rgba(0, 229, 255, 0.2); }
+    .tag-green { color: #00E676; background: rgba(0, 230, 118, 0.1); border: 1px solid rgba(0, 230, 118, 0.2); }
+
+    /* CRT Scanline Overlay */
+    .crt-overlay::before {
+      content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.015), rgba(0, 255, 0, 0.005), rgba(0, 0, 255, 0.015));
+      z-index: 0; background-size: 100% 4px, 6px 100%; pointer-events: none; opacity: 0.6;
+    }
+    .z-content { position: relative; z-index: 2; }
+
+    /* ==========================================================================
+       SECTION 1: HERO
+       ========================================================================== */
+    .services-hero {
+      position: relative;
+      background: linear-gradient(180deg, rgba(10,10,10,0.95) 0%, rgba(5,5,5,1) 100%);
+      padding: 120px 40px; min-height: 40vh;
+      display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+      border-bottom: 1px solid #333;
+      margin-top: 80px; /* Space for the fixed header */
+    }
+
+    .hero-container { max-width: 1200px; margin: 0 auto; width: 100%; }
+
+    .hero-kicker {
+      font-family: 'Courier New', Courier, monospace; color: #00E5FF; font-size: 1rem;
+      letter-spacing: 4px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; text-transform: uppercase;
+    }
+    .hero-kicker::before {
+      content: ''; display: inline-block; width: 10px; height: 10px; background-color: #00E5FF;
+      box-shadow: 0 0 12px #00E5FF; animation: pulse-cyan 1.5s infinite;
+    }
+    @keyframes pulse-cyan { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.8); } }
+
+    .hero-headline {
+      font-family: 'Courier New', Courier, monospace; font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 900; letter-spacing: -2px; margin: 0 0 20px 0; text-transform: uppercase; line-height: 1.1;
+    }
+    .hero-subhead {
+      font-size: clamp(1.1rem, 2vw, 1.25rem); line-height: 1.6; color: #a0a0a0; max-width: 800px;
+    }
+
+    /* ==========================================================================
+       SECTION 2: DEPLOYMENT PACKAGES
+       ========================================================================== */
+    .service-catalog { max-width: 1250px; margin: 80px auto; padding: 20px; }
+    
+    .section-title { font-family: 'Courier New', Courier, monospace; font-size: 2.2rem; text-transform: uppercase; margin-bottom: 40px; border-left: 4px solid #fff; padding-left: 15px; }
+
+    .catalog-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-bottom: 30px;
+    }
+
+    .tier-card {
+      background: rgba(14, 14, 14, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.05); padding: 35px 30px; position: relative; overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease; display: flex; flex-direction: column;
+    }
+    .tier-card:hover { transform: translateY(-5px); box-shadow: 0 15px 35px rgba(0,0,0,0.8); }
+    
+    .tier-recon { border-top: 4px solid #607D8B; } /* Slate/Gray for base */
+    .tier-atlas { border-top: 4px solid #00E5FF; } /* Cyan for Map */
+    .tier-intel { border-top: 4px solid #FFC107; } /* Gold for Analysis */
+    .tier-command { border-top: 4px solid #E53935; } /* Red for Full Service */
+
+    .tier-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+    .tier-name { font-family: 'Courier New', Courier, monospace; font-size: 2rem; font-weight: 900; margin: 0; line-height: 1; }
+    .tier-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: #888; font-family: 'Courier New', Courier, monospace; font-weight: bold; }
+    
+    .tier-desc { font-size: 1rem; line-height: 1.6; color: #ccc; margin: 0 0 30px 0; flex-grow: 1; }
+    
+    .tier-pricing { border-top: 1px dashed #333; padding-top: 20px; margin-top: auto; }
+    .tier-price-val { font-family: 'Courier New', Courier, monospace; font-size: 1.6rem; font-weight: bold; color: #fff; display: block; margin-bottom: 4px; }
+    .tier-price-term { font-size: 0.8rem; color: #666; text-transform: uppercase; letter-spacing: 1px; }
+
+    .tier-recon .tier-price-val { color: #607D8B; }
+    .tier-atlas .tier-price-val { color: #00E5FF; }
+    .tier-intel .tier-price-val { color: #FFC107; }
+    .tier-command .tier-price-val { color: #E53935; }
+
+    /* Sentinel Add-on */
+    .sentinel-banner {
+      background: rgba(10, 10, 10, 0.9); border: 1px solid #333; border-left: 4px solid #00E676;
+      padding: 25px 30px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;
+    }
+    .sentinel-info h4 { font-family: 'Courier New', Courier, monospace; font-size: 1.4rem; color: #fff; margin: 0 0 8px 0; display: flex; align-items: center; gap: 10px; }
+    .sentinel-info h4 span { background: #00E676; color: #000; font-size: 0.7rem; padding: 2px 6px; border-radius: 2px; }
+    .sentinel-info p { margin: 0; color: #aaa; font-size: 0.95rem; }
+    .sentinel-price { text-align: right; }
+    .s-val { font-family: 'Courier New', Courier, monospace; font-size: 1.4rem; font-weight: bold; color: #00E676; display: block; }
+    .s-term { font-size: 0.8rem; color: #666; text-transform: uppercase; letter-spacing: 1px; }
+
+    /* ==========================================================================
+       SECTION 3: MELKIN SUBSCRIPTIONS
+       ========================================================================== */
+    .subscriptions-section {
+      background: #0a0a0a; border-top: 1px solid #222; border-bottom: 1px solid #222;
+      padding: 100px 20px;
+    }
+    .sub-container { max-width: 1250px; margin: 0 auto; }
+    
+    .sub-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-top: 40px;
+    }
+    @media (max-width: 950px) { .sub-grid { grid-template-columns: 1fr; } }
+
+    .sub-card {
+      background: #111; border: 1px solid #333; padding: 40px 30px; display: flex; flex-direction: column;
+      transition: transform 0.3s ease; position: relative;
+    }
+    .sub-card:hover { transform: translateY(-5px); border-color: #555; }
+    
+    .sub-shield { border-top: 4px solid #fff; background: rgba(255,255,255,0.02); box-shadow: 0 10px 30px rgba(0,0,0,0.8); transform: scale(1.02); z-index: 2; }
+    .sub-shield:hover { transform: scale(1.02) translateY(-5px); }
+
+    @media (max-width: 950px) { .sub-shield { transform: scale(1); } .sub-shield:hover { transform: translateY(-5px); } }
+
+    .sub-header { margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #222; }
+    .sub-title { font-family: 'Courier New', Courier, monospace; font-size: 1.5rem; text-transform: uppercase; margin: 0 0 15px 0; color: #fff; }
+    .sub-price { font-family: 'Courier New', Courier, monospace; font-size: 2.2rem; font-weight: bold; color: #fff; margin: 0 0 5px 0; line-height: 1; }
+    .sub-visit-rate { font-size: 0.85rem; color: #888; font-family: 'Courier New', Courier, monospace; }
+
+    .sub-features { list-style: none; padding: 0; margin: 0; flex-grow: 1; }
+    .sub-features li {
+      position: relative; padding-left: 20px; margin-bottom: 15px; color: #bbb; font-size: 0.95rem; line-height: 1.5;
+    }
+    .sub-features li::before {
+      content: '◆'; position: absolute; left: 0; top: 0; color: #555; font-size: 0.8rem;
+    }
+    .sub-shield .sub-features li::before { color: #fff; }
+    
+    .sub-cadence {
+      font-family: 'Courier New', Courier, monospace; font-weight: bold; color: #fff; display: block; margin-bottom: 20px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div id="header-placeholder"></div>
+
+  <section id="services-hero">
+    <div class="services-hero crt-overlay">
+      <div class="hero-container z-content">
+        <span class="hero-kicker">SYS_SERVICE_CATALOG // DEPLOYMENT_TIERS</span>
+        <h1 class="hero-headline">Service-First<br>Delivery</h1>
+        <p class="hero-subhead">
+          Scalable from a single-day geometry capture to a fully automated, year-round structural compliance contract.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="service-catalog">
+    <div class="service-catalog">
+      
+      <h2 class="section-title">A La Carte Service Packages</h2>
+
+      <div class="catalog-grid">
+        
+        <div class="tier-card tier-recon crt-overlay">
+          <div class="z-content">
+            <div class="tier-header">
+              <h3 class="tier-name">RECON</h3>
+              <span class="tier-type">Data Capture</span>
+            </div>
+            <p class="tier-desc">Raw LiDAR point cloud only — geometry capture delivered as .las / .e57. No engineering review included.</p>
+            <div class="tier-pricing">
+              <span class="tier-price-val">$4,500</span>
+              <span class="tier-price-term">/ deployment day</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tier-card tier-atlas crt-overlay">
+          <div class="z-content">
+            <div class="tier-header">
+              <h3 class="tier-name">ATLAS</h3>
+              <span class="tier-type">Map</span>
+            </div>
+            <p class="tier-desc">Point cloud + geo-registered photographic overlay via GoPro Max. Navigable 3D visual map of the inspected space.</p>
+            <div class="tier-pricing">
+              <span class="tier-price-val">$7,500</span>
+              <span class="tier-price-term">/ deployment day</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tier-card tier-intel crt-overlay">
+          <div class="z-content">
+            <div class="tier-header">
+              <h3 class="tier-name">INTEL</h3>
+              <span class="tier-type">Analysis</span>
+            </div>
+            <p class="tier-desc">ATLAS deliverables + structural / condition assessment engineering report with annotated defects and risk flags.</p>
+            <div class="tier-pricing">
+              <span class="tier-price-val">$14,000</span>
+              <span class="tier-price-term">/ engagement</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tier-card tier-command crt-overlay">
+          <div class="z-content">
+            <div class="tier-header">
+              <h3 class="tier-name">COMMAND</h3>
+              <span class="tier-type">Full Service</span>
+            </div>
+            <p class="tier-desc">Complete INTEL package + prioritised remediation roadmap + regulatory compliance advisory + next-step action plan.</p>
+            <div class="tier-pricing">
+              <span class="tier-price-val">$32,000</span>
+              <span class="tier-price-term">/ engagement</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="sentinel-banner crt-overlay">
+        <div class="sentinel-info z-content">
+          <h4>SENTINEL <span>ADD-ON</span></h4>
+          <p>Change detection vs. prior baseline scan.</p>
+        </div>
+        <div class="sentinel-price z-content">
+          <span class="s-val">+$3,000</span>
+          <span class="s-term">/ re-scan</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="subscriptions-section">
+    <div class="subscriptions-section">
+      <div class="sub-container">
+        
+        <h2 class="section-title">Melkin Subscriptions</h2>
+
+        <div class="sub-grid">
+          
+          <div class="sub-card">
+            <div class="sub-header">
+              <h3 class="sub-title">MELKIN CORE</h3>
+              <p class="sub-price">$24,000 <span style="font-size:1rem; color:#888;">/ year</span></p>
+              <span class="sub-visit-rate">($6,000 / visit)</span>
+            </div>
+            <span class="sub-cadence">4x per year — ATLAS-tier deliverable each visit</span>
+            <ul class="sub-features">
+              <li>Priority scheduling + guaranteed deployment slots</li>
+              <li>Asset history portal — all scans in one searchable record</li>
+              <li>10% discount vs. equivalent a la carte ATLAS bookings</li>
+            </ul>
+          </div>
+
+          <div class="sub-card sub-shield">
+            <div class="sub-header">
+              <h3 class="sub-title">MELKIN SHIELD</h3>
+              <p class="sub-price">$96,000 <span style="font-size:1rem; color:#888;">/ year</span></p>
+              <span class="sub-visit-rate">($8,000 / visit)</span>
+            </div>
+            <span class="sub-cadence">12x per year — INTEL-tier deliverable each visit</span>
+            <ul class="sub-features">
+              <li>Quarterly cumulative summary report + change detection</li>
+              <li>Priority emergency response — deployment within 5 business days</li>
+              <li>Automated compliance record generation included</li>
+            </ul>
+          </div>
+
+          <div class="sub-card">
+            <div class="sub-header">
+              <h3 class="sub-title">MELKIN ENTERPRISE</h3>
+              <p class="sub-price" style="color:#00E5FF;">Custom Pricing</p>
+              <span class="sub-visit-rate">Contact MELKIN</span>
+            </div>
+            <span class="sub-cadence">Custom cadence — COMMAND-tier, multi-site coverage</span>
+            <ul class="sub-features">
+              <li>48-hour emergency deployment + dedicated account manager</li>
+              <li>Joint SOP development + operator integration support</li>
+              <li>Annual compliance documentation package</li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+
+  <script>
+    function loadComponent(id, file) {
+      fetch(file)
+        .then(response => {
+          if (!response.ok) throw new Error("Network response was not ok");
+          return response.text();
+        })
+        .then(data => document.getElementById(id).innerHTML = data)
+        .catch(error => console.error("Error loading component:", error));
+    }
+
+    // Fire the injection
+    loadComponent('header-placeholder', 'components/header.html');
+    loadComponent('footer-placeholder', 'components/footer.html');
+  </script>
+
+</body>
+</html>
