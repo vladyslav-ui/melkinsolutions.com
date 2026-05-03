@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Industries | HAGES by MELKIN</title>
+  
+  <style>
+    /* ==========================================================================
+       MELKIN BRAND VARIABLES & GLOBAL STYLES
+       ========================================================================== */
+    :root {
+      --melkin-dark: #292929;
+      --melkin-gray: #585858;
+      --melkin-gold: #ffc815;
+      --melkin-white: #ffffff;
+      --melkin-black: #000000;
+      --melkin-alert-red: #E53935; /* Exception color for alerts/hazards */
+      
+      /* Chart Bubble Colors */
+      --chart-sewer: rgba(0, 137, 123, 0.85);
+      --chart-rail: rgba(3, 155, 229, 0.85);
+      --chart-ind: rgba(230, 81, 0, 0.85);
+      --chart-mine: rgba(40, 53, 147, 0.85);
+      --chart-util: rgba(117, 117, 117, 0.85);
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--melkin-dark);
+      color: var(--melkin-white);
+      font-family: "Palatino", "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    section {
+      position: relative;
+      width: 100%;
+    }
+
+    h1, h2, h3, h4 {
+      font-weight: normal;
+      margin: 0;
+    }
+
+    /* Subtle Fade-in Animation */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-fade-up {
+      animation: fadeUp 1s ease-out forwards;
+    }
+
+    /* Glass Panel Mixin */
+    .glass-panel {
+      background: rgba(88, 88, 88, 0.2); 
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-top: 3px solid var(--melkin-gold);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .glass-panel:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7);
+    }
+
+    /* Exceptions for Red text */
+    .text-red {
+      color: var(--melkin-alert-red) !important;
+    }
+
+    /* Section Divider (Gradient Line with Diamond) */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(255, 200, 21, 0.6), transparent);
+      position: relative;
+      z-index: 10;
+      margin: 0; 
+    }
+
+    .section-divider::after {
+      content: '';
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      background-color: var(--melkin-gold);
+      transform: rotate(45deg);
+      box-shadow: 0 0 15px rgba(255, 200, 21, 0.8);
+    }
+
+    /* ==========================================================================
+       SECTION 1: HERO
+       ========================================================================== */
+    .industry-hero {
+      position: relative;
+      background-image: url('assets/img/tunnel-bg-orange.png');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      padding: 260px 40px 120px 40px; 
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .industry-hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(41, 41, 41, 0.85); 
+      z-index: 1;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 1000px;
+    }
+
+    .hero-kicker {
+      color: var(--melkin-gold);
+      font-size: 1.1rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: bold;
+      margin-bottom: 20px;
+      display: inline-block;
+    }
+
+    .hero-headline {
+      font-size: clamp(3rem, 5vw, 4.5rem);
+      margin-bottom: 25px;
+      color: var(--melkin-white);
+      line-height: 1.1;
+    }
+
+    .hero-subhead {
+      font-size: 1.2rem;
+      color: #cccccc;
+      margin: 0 auto 50px auto;
+      max-width: 850px;
+    }
+
+    .hero-stats {
+      display: flex; 
+      justify-content: center; 
+      gap: 30px; 
+      flex-wrap: wrap;
+    }
+
+    .stat-card {
+      background: rgba(41, 41, 41, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-left: 3px solid var(--melkin-gold);
+      padding: 25px 40px; 
+      text-align: left; 
+      min-width: 250px;
+      backdrop-filter: blur(10px);
+    }
+
+    .stat-value {
+      display: block; 
+      font-size: 3rem;
+      color: var(--melkin-white); 
+      margin-bottom: 5px; 
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.95rem; 
+      text-transform: uppercase; 
+      letter-spacing: 1px;
+      color: #bbbbbb; 
+    }
+
+    /* ==========================================================================
+       SECTION 2: STRUCTURAL GAP
+       ========================================================================== */
+    .gap-section { 
+      padding: 100px 20px; 
+      background-image: url('assets/img/lidar-map-4.png');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      position: relative;
+    }
+
+    .gap-section::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(41, 41, 41, 0.93); z-index: 1;
+    }
+
+    .gap-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 60px;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .section-header h2 {
+      font-size: 2.5rem;
+      color: var(--melkin-white);
+      margin-bottom: 20px;
+    }
+
+    .section-header p {
+      font-size: 1.15rem;
+      color: #cccccc;
+    }
+
+    .highlight-gold { color: var(--melkin-gold); font-weight: bold; }
+
+    .gap-grid {
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+      gap: 30px; 
+    }
+
+    .diag-card {
+      padding: 40px 30px;
+    }
+
+    .card-title {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      color: var(--melkin-white);
+      font-weight: bold;
+    }
+
+    /* Compliance Badges */
+    .status-badge {
+      display: inline-block;
+      padding: 6px 14px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 0.85rem;
+      font-weight: bold;
+    }
+    .badge-yellow {
+      border: 1px solid var(--melkin-gold);
+      color: var(--melkin-gold);
+    }
+    .badge-red {
+      border: 1px solid var(--melkin-alert-red);
+      color: var(--melkin-alert-red);
+    }
+
+    .card-data { 
+      border-top: 1px solid rgba(255, 255, 255, 0.1); 
+      padding-top: 20px; 
+      margin-top: 20px;
+    }
+
+    .data-row { 
+      display: flex; 
+      justify-content: space-between; 
+      font-size: 1.05rem; 
+      margin-bottom: 10px; 
+      color: #cccccc; 
+    }
+
+    .data-row span:last-child { 
+      color: var(--melkin-white); 
+    }
+
+    .card-warning {
+      font-size: 0.95rem; 
+      margin-top: 20px; 
+      font-style: italic;
+    }
+    .warning-yellow { color: var(--melkin-gold); }
+    .warning-red { color: var(--melkin-alert-red); }
+
+    /* ==========================================================================
+       SECTION 2.5: TARGETING CHART (SVG Bubble Chart)
+       ========================================================================== */
+    .targeting-section {
+      padding: 100px 20px; 
+      background-image: linear-gradient(rgba(34, 34, 34, 0.97), rgba(34, 34, 34, 0.97)), url('assets/img/cave-bg-black.png');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      position: relative;
+    }
+
+    .chart-wrapper {
+      width: 100%;
+      overflow-x: auto;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+    }
+
+    .chart-wrapper svg {
+      width: 100%;
+      min-width: 800px;
+      height: auto;
+      display: block;
+      font-family: "Palatino", serif;
+    }
+
+    .chart-caption-box {
+      background: rgba(255, 200, 21, 0.05);
+      border-left: 4px solid var(--melkin-gold);
+      padding: 20px;
+      margin-top: 20px;
+      font-size: 1.05rem;
+      color: #ddd;
+    }
+
+    .bubble-text-bold { fill: #fff; font-weight: bold; font-size: 14px; text-anchor: middle; }
+    .bubble-text-sub { fill: #ccc; font-size: 12px; text-anchor: middle; }
+    .axis-text { fill: #888; font-size: 13px; text-anchor: middle; }
+
+    /* ==========================================================================
+       SECTION 3: UNDERGROUND MINING
+       ========================================================================== */
+    .mining-section { 
+      padding: 100px 20px; 
+      background-image: url('assets/img/mine-inspection-1.png');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      position: relative;
+    }
+
+    .mining-section::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(41, 41, 41, 0.88); z-index: 1;
+    }
+
+    .sector-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    .sector-header {
+      margin-bottom: 50px;
+    }
+
+    .sector-header h2 {
+      font-size: 3rem;
+      color: var(--melkin-white);
+    }
+
+    .data-strip-container { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 20px; 
+      margin-bottom: 60px; 
+    }
+
+    .data-strip {
+      padding: 0; 
+      cursor: pointer;
+    }
+
+    .strip-header { 
+      padding: 30px 40px; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+    }
+
+    .strip-id { 
+      font-size: 1.2rem; 
+      font-weight: bold; 
+      color: var(--melkin-gold); 
+      text-transform: uppercase; 
+      letter-spacing: 1px;
+    }
+
+    .strip-content { 
+      max-height: 0; 
+      opacity: 0; 
+      padding: 0 40px; 
+      transition: all 0.4s ease; 
+      overflow: hidden;
+    }
+
+    .strip-content p { 
+      font-size: 1.1rem; 
+      color: #eeeeee; 
+      margin: 0 0 30px 0; 
+    }
+
+    .data-strip:hover .strip-content { 
+      max-height: 400px; 
+      opacity: 1; 
+      padding-bottom: 30px; 
+    }
+
+    .impact-banner {
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      flex-wrap: wrap; 
+      gap: 40px;
+      padding: 40px; 
+    }
+
+    .impact-text { flex: 1 1 400px; }
+    .impact-title { font-size: 1.5rem; color: var(--melkin-white); margin-bottom: 15px; }
+    .impact-desc { color: #cccccc; font-size: 1.1rem; margin: 0; }
+    
+    .impact-stats { display: flex; gap: 20px; flex-wrap: wrap; }
+    .i-stat { padding: 10px 20px; border-left: 2px solid var(--melkin-gold); }
+    .i-val { display: block; font-size: 2.2rem; color: var(--melkin-white); line-height: 1; margin-bottom: 5px; }
+    .i-lab { font-size: 0.9rem; color: #aaaaaa; text-transform: uppercase; letter-spacing: 1px; }
+
+    /* ==========================================================================
+       SECTION 4: MUNICIPAL & CIVIL
+       ========================================================================== */
+    .civil-section { 
+      padding: 100px 20px; 
+      background-image: url('assets/img/sewer-bg-1.png');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      position: relative;
+    }
+
+    .civil-section::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(41, 41, 41, 0.92); z-index: 1;
+    }
+
+    .bento-grid { 
+      display: grid; 
+      grid-template-columns: repeat(3, 1fr); 
+      gap: 30px; 
+    }
+
+    @media (max-width: 950px) { .bento-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 650px) { .bento-grid { grid-template-columns: 1fr; } }
+
+    .bento-panel { padding: 50px 40px; }
+    .panel-threat { grid-column: span 1; grid-row: span 2; }
+    .panel-deploy { grid-column: span 2; }
+    .panel-validation { grid-column: span 2; }
+
+    @media (max-width: 950px) { 
+      .panel-threat, .panel-deploy, .panel-validation { grid-column: span 2; grid-row: span 1; } 
+    }
+
+    .bento-panel h3 { font-size: 1.8rem; color: var(--melkin-white); margin-bottom: 20px; }
+    .bento-panel p { font-size: 1.1rem; color: #d4d4d4; margin-bottom: 20px; }
+    .bento-panel p:last-child { margin-bottom: 0; }
+
+    .val-grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); 
+      gap: 20px; 
+      margin-top: 30px; 
+      border-top: 1px solid rgba(255, 255, 255, 0.1); 
+      padding-top: 30px; 
+    }
+    
+    .val-stat .val-num { display: block; font-size: 2.2rem; color: var(--melkin-white); margin-bottom: 5px; line-height: 1; }
+    .val-stat .val-label { font-size: 0.9rem; text-transform: uppercase; color: #aaaaaa; letter-spacing: 1px; }
+
+    /* ==========================================================================
+       SECTION 5: RAIL & TRANSIT
+       ========================================================================== */
+    .rail-section { 
+      padding: 100px 20px; 
+      background-image: url('assets/img/tunnel-inspection-2.png');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      position: relative;
+    }
+
+    .rail-section::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(41, 41, 41, 0.88); z-index: 1;
+    }
+
+    .timeline-wrapper { 
+      position: relative; 
+      max-width: 1000px; 
+      margin: 0 auto 60px auto; 
+      padding: 20px 0; 
+    }
+
+    .timeline-wrapper::after { 
+      content: ''; 
+      position: absolute; 
+      width: 2px; 
+      background: var(--melkin-gray); 
+      top: 0; bottom: 0; left: 50%; 
+      margin-left: -1px; 
+      z-index: 1; 
+    }
+
+    .timeline-node { 
+      padding: 10px 40px; 
+      position: relative; 
+      width: 50%; 
+      box-sizing: border-box; 
+      margin-bottom: 40px; 
+    }
+
+    .timeline-node:nth-child(odd) { left: 0; text-align: right; }
+    .timeline-node:nth-child(even) { left: 50%; text-align: left; }
+
+    /* Timeline Dots */
+    .timeline-node::after { 
+      content: ''; 
+      position: absolute; 
+      width: 16px; height: 16px; 
+      background-color: var(--melkin-dark); 
+      border: 3px solid var(--melkin-gold); 
+      top: 40px; 
+      border-radius: 50%; 
+      z-index: 2; 
+    }
+    
+    .timeline-node:nth-child(odd)::after { right: -11px; }
+    .timeline-node:nth-child(even)::after { left: -11px; }
+
+    .node-panel { padding: 30px; text-align: left; }
+    .node-panel h3 { font-size: 1.5rem; color: var(--melkin-gold); margin-bottom: 15px; }
+    .node-panel p { font-size: 1.1rem; color: #d4d4d4; margin: 0; }
+
+    @media screen and (max-width: 850px) {
+      .timeline-wrapper::after { left: 20px; }
+      .timeline-node { width: 100%; padding-left: 50px; padding-right: 0; text-align: left; }
+      .timeline-node:nth-child(odd), .timeline-node:nth-child(even) { left: 0; }
+      .timeline-node:nth-child(odd)::after, .timeline-node:nth-child(even)::after { left: 10px; }
+    }
+
+    /* ==========================================================================
+       SECTION 6: CTA
+       ========================================================================== */
+    .cta-section { 
+      padding: 100px 20px; 
+      background-image: url('assets/img/cave-bg-black.png');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      position: relative;
+      text-align: center;
+    }
+
+    .cta-section::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(41, 41, 41, 0.95); z-index: 1;
+    }
+
+    .cta-panel { 
+      max-width: 800px; 
+      margin: 0 auto; 
+      padding: 60px 40px; 
+      position: relative;
+      z-index: 2;
+    }
+
+    .cta-panel h2 { 
+      font-size: clamp(2rem, 4vw, 3rem); 
+      margin: 0 0 20px 0; 
+      color: var(--melkin-white); 
+    }
+
+    .cta-panel p { 
+      font-size: 1.2rem; 
+      color: #cccccc; 
+      margin-bottom: 30px; 
+    }
+
+    .submit-btn {
+      display: inline-block;
+      text-decoration: none;
+      background: var(--melkin-gold); 
+      color: var(--melkin-black); 
+      padding: 18px 35px;
+      font-size: 1.1rem; 
+      font-weight: bold;
+      text-transform: uppercase; 
+      letter-spacing: 2px; 
+      transition: all 0.3s ease; 
+    }
+
+    .submit-btn:hover { 
+      background: var(--melkin-white); 
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <div id="header-placeholder"></div>
+
+  <section id="section-hero" class="industry-hero">
+    <div class="hero-content animate-fade-up">
+      <span class="hero-kicker">Deployment Zones: Hazard Critical</span>
+      <h1 class="hero-headline">Targeting the <span class="text-red">Red Zone</span></h1>
+      <p class="hero-subhead">
+        We deploy the HAGES architecture into environments where the consequence of failure is extreme, but manual access is prohibitively expensive or lethal.
+      </p>
+      
+      <div class="hero-stats">
+        <div class="stat-card glass-panel">
+          <span class="stat-value">100%</span>
+          <span class="stat-label">Personnel Exposure Eliminated</span>
+        </div>
+        <div class="stat-card glass-panel">
+          <span class="stat-value">500m+</span>
+          <span class="stat-label">GPS-Denied Penetration</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <section id="section-data-grid" class="gap-section">
+    <div class="gap-container animate-fade-up" style="animation-delay: 0.2s;">
+      
+      <div class="section-header">
+        <h2>The Inspection Gap is Structural</h2>
+        <p>
+          Across global infrastructure, high-consequence assets are operating dangerously below mandated inspection frequencies. Traditional manual inspections cost upwards of <span class="highlight-gold">$122,000 per event</span> — driven primarily by asset downtime and safety standby. HAGES closes this gap for <span class="highlight-gold">$34,000</span>.
+        </p>
+      </div>
+
+      <div class="gap-grid">
+        <div class="diag-card glass-panel">
+          <div class="card-title">Mine Headings</div>
+          <div class="status-badge badge-red">50% Compliance</div>
+          <div class="card-data">
+            <div class="data-row"><span>Required Freq:</span> <span>4.00 / yr</span></div>
+            <div class="data-row"><span>Actual Achieved:</span> <span>2.00 / yr</span></div>
+            <div class="card-warning warning-red">Hazard: Ground falls, explosions</div>
+          </div>
+        </div>
+
+        <div class="diag-card glass-panel">
+          <div class="card-title">Rail Tunnels</div>
+          <div class="status-badge badge-yellow">68% Compliance</div>
+          <div class="card-data">
+            <div class="data-row"><span>Required Freq:</span> <span>1.00 / yr</span></div>
+            <div class="data-row"><span>Actual Achieved:</span> <span>0.70 / yr</span></div>
+            <div class="card-warning warning-yellow">Hazard: Asset downtime limitations</div>
+          </div>
+        </div>
+
+        <div class="diag-card glass-panel">
+          <div class="card-title">Ind. Vessels</div>
+          <div class="status-badge badge-yellow">60% Compliance</div>
+          <div class="card-data">
+            <div class="data-row"><span>Required Freq:</span> <span>1.00 / yr</span></div>
+            <div class="data-row"><span>Actual Achieved:</span> <span>0.60 / yr</span></div>
+            <div class="card-warning warning-yellow">Hazard: Confined space entry</div>
+          </div>
+        </div>
+
+        <div class="diag-card glass-panel">
+          <div class="card-title">Sewer Mains</div>
+          <div class="status-badge badge-red">38% Compliance</div>
+          <div class="card-data">
+            <div class="data-row"><span>Required Freq:</span> <span>0.20 / yr</span></div>
+            <div class="data-row"><span>Actual Achieved:</span> <span>0.08 / yr</span></div>
+            <div class="card-warning warning-red">Hazard: Toxic gas, engulfment</div>
+          </div>
+        </div>
+        
+        <div class="diag-card glass-panel">
+          <div class="card-title">Utility Tunnels</div>
+          <div class="status-badge badge-red">41% Compliance</div>
+          <div class="card-data">
+            <div class="data-row"><span>Required Freq:</span> <span>0.33 / yr</span></div>
+            <div class="data-row"><span>Actual Achieved:</span> <span>0.14 / yr</span></div>
+            <div class="card-warning warning-red">Hazard: Asbestos, O2 deficiency</div>
+          </div>
+        </div>
+
+        <div class="diag-card glass-panel">
+          <div class="card-title">Stormwater</div>
+          <div class="status-badge badge-red">27% Compliance</div>
+          <div class="card-data">
+            <div class="data-row"><span>Required Freq:</span> <span>0.15 / yr</span></div>
+            <div class="data-row"><span>Actual Achieved:</span> <span>0.04 / yr</span></div>
+            <div class="card-warning warning-red">Hazard: Extreme access geometry</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <section id="section-market-targeting" class="targeting-section">
+    <div class="gap-container animate-fade-up" style="animation-delay: 0.1s;">
+      
+      <div class="section-header">
+        <div class="status-badge" style="border-color: var(--melkin-gold); color: var(--melkin-gold); margin-bottom: 15px;">Market Thesis</div>
+        <h2>Strategic Targeting: High-Pain, Low-Coverage</h2>
+        <p>Consequence severity of missed inspection vs. inspection frequency (events/year). Bubble area represents the addressable market, while dashed circles indicate the required, mandated frequency.</p>
+      </div>
+
+      <div class="glass-panel" style="padding: 30px;">
+        <div class="chart-wrapper">
+          <svg viewBox="0 0 1000 450" preserveAspectRatio="xMidYMid meet">
+            
+            <line x1="80" y1="50" x2="950" y2="50" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+            <text x="60" y="55" class="axis-text">10</text>
+
+            <line x1="80" y1="125" x2="950" y2="125" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+            <text x="60" y="130" class="axis-text">9</text>
+
+            <line x1="80" y1="200" x2="950" y2="200" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+            <text x="60" y="205" class="axis-text">8</text>
+
+            <line x1="80" y1="275" x2="950" y2="275" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+            <text x="60" y="280" class="axis-text">7</text>
+
+            <line x1="80" y1="350" x2="950" y2="350" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+            <text x="60" y="355" class="axis-text">6</text>
+
+            <text x="-200" y="30" class="axis-text" transform="rotate(-90)" style="font-weight: bold; letter-spacing: 1px;">Consequence Severity (1–10)</text>
+
+            <line x1="100" y1="50" x2="100" y2="370" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+            <text x="100" y="390" class="axis-text">0</text>
+
+            <line x1="300" y1="50" x2="300" y2="370" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+            <text x="300" y="390" class="axis-text">1.0</text>
+
+            <line x1="500" y1="50" x2="500" y2="370" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+            <text x="500" y="390" class="axis-text">2.0</text>
+
+            <line x1="700" y1="50" x2="700" y2="370" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+            <text x="700" y="390" class="axis-text">3.0</text>
+
+            <line x1="900" y1="50" x2="900" y2="370" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+            <text x="900" y="390" class="axis-text">4.0</text>
+
+            <text x="500" y="430" class="axis-text" style="font-weight: bold; letter-spacing: 1px;">Inspection Frequency (events/year)</text>
+
+            <rect x="300" y="50" width="600" height="225" fill="rgba(255, 200, 21, 0.05)" stroke="var(--melkin-gold)" stroke-width="3" stroke-dasharray="10, 8"/>
+            <text x="890" y="260" fill="var(--melkin-gold)" font-size="12px" text-anchor="end" font-weight="bold" letter-spacing="1px">PRIMARY TARGET AREA</text>
+
+            <line x1="128" y1="312.5" x2="166" y2="312.5" stroke="#555" stroke-width="2" stroke-dasharray="4,4"/>
+            <circle cx="166" cy="312.5" r="20" fill="transparent" stroke="var(--chart-util)" stroke-width="2" stroke-dasharray="6,4" />
+            <circle cx="128" cy="312.5" r="20" fill="var(--chart-util)" />
+            <text x="128" y="348" class="bubble-text-bold" style="font-size: 11px;">$0.4B</text>
+            <text x="128" y="362" class="bubble-text-sub" style="font-size: 11px;">Utility</text>
+
+            <line x1="116" y1="200" x2="140" y2="200" stroke="#555" stroke-width="2" stroke-dasharray="4,4"/>
+            <circle cx="140" cy="200" r="40" fill="transparent" stroke="var(--chart-sewer)" stroke-width="2" stroke-dasharray="6,4" />
+            <circle cx="116" cy="200" r="40" fill="var(--chart-sewer)" />
+            <text x="116" y="195" class="bubble-text-bold">$1.4B</text>
+            <text x="116" y="215" class="bubble-text-sub">Sewer</text>
+
+            <line x1="220" y1="237.5" x2="300" y2="237.5" stroke="#555" stroke-width="2" stroke-dasharray="4,4"/>
+            <circle cx="300" cy="237.5" r="35" fill="transparent" stroke="var(--chart-ind)" stroke-width="2" stroke-dasharray="6,4" />
+            <circle cx="220" cy="237.5" r="35" fill="var(--chart-ind)" />
+            <text x="220" y="232.5" class="bubble-text-bold">$1.2B</text>
+            <text x="220" y="252.5" class="bubble-text-sub">Industrial</text>
+
+            <line x1="240" y1="162.5" x2="300" y2="162.5" stroke="#555" stroke-width="2" stroke-dasharray="4,4"/>
+            <circle cx="300" cy="162.5" r="25" fill="transparent" stroke="var(--chart-rail)" stroke-width="2" stroke-dasharray="6,4" />
+            <circle cx="240" cy="162.5" r="25" fill="var(--chart-rail)" />
+            <text x="240" y="115" class="bubble-text-bold">$0.6B</text>
+            <text x="240" y="130" class="bubble-text-sub">Rail/Subway</text>
+
+            <line x1="500" y1="87.5" x2="900" y2="87.5" stroke="#555" stroke-width="2" stroke-dasharray="4,4"/>
+            <circle cx="900" cy="87.5" r="45" fill="transparent" stroke="var(--chart-mine)" stroke-width="2" stroke-dasharray="6,4" />
+            <circle cx="500" cy="87.5" r="45" fill="var(--chart-mine)" />
+            <text x="500" y="82.5" class="bubble-text-bold">$1.6B</text>
+            <text x="500" y="102.5" class="bubble-text-sub" style="fill: #fff;">Mining</text>
+
+          </svg>
+        </div>
+
+        <div class="chart-caption-box">
+          <span style="color: var(--melkin-gold); font-size: 1.2rem; margin-right: 10px;">&#9888;</span>
+          <strong>Primary Target Area: Severity &gt;7 + Required Frequency &gt;1 inspection/yr</strong> — Mine Headings, Rail Tunnels & Industrial Vessels: highest consequence assets with persistent inspection gaps.
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <section id="section-mining" class="mining-section">
+    <div class="sector-container">
+      
+      <div class="sector-header">
+        <span class="hero-kicker">Sector 01</span>
+        <h2>Underground Mining</h2>
+      </div>
+
+      <div class="data-strip-container">
+        <div class="data-strip glass-panel">
+          <div class="strip-header">
+            <div class="strip-id">The Hazard</div>
+            <div class="status-badge badge-red">Fatality Risk: Critical</div>
+          </div>
+          <div class="strip-content">
+            <p>Between 2019 and 2023, U.S. mining fatalities trended upward to 40 per year, driven by ground falls, gas explosions, and machinery accidents. Relying on human entry to inspect active drives, stopes, and ore passes exposes personnel to unpredictable and lethal risks.</p>
+          </div>
+        </div>
+
+        <div class="data-strip glass-panel">
+          <div class="strip-header">
+            <div class="strip-id">The Limitation</div>
+            <div class="status-badge badge-red">Standalone UAV: Insufficient</div>
+          </div>
+          <div class="strip-content">
+            <p>Standalone drones hit a physical endurance wall at a limit of ~150 meters. Meanwhile, standalone rovers suffer a 56% capability loss over 500 meters due to terrain limitations. Neither single-mode system can independently map complex, multi-kilometer underground drives.</p>
+          </div>
+        </div>
+
+        <div class="data-strip glass-panel">
+          <div class="strip-header">
+            <div class="strip-id">HAGES Deployment</div>
+            <div class="status-badge badge-yellow">Hybrid Architecture: Active</div>
+          </div>
+          <div class="strip-content">
+            <p>The goBilda Overlander-T crawler transports the DJI Matrice 350 RTK deep into the drive. The M350 launches to map featureless stopes autonomously. Crucially, the drone returns to the rover for mid-mission wireless recharging. This hybrid system maintains a 90% operational capability even at 500m penetration.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="impact-banner glass-panel">
+        <div class="impact-text">
+          <div class="impact-title">Operational Impact</div>
+          <p class="impact-desc">By eliminating safety standby teams and compressing the inspection window, HAGES drastically cuts the financial burden of structural assessment without sacrificing data fidelity.</p>
+        </div>
+        <div class="impact-stats">
+          <div class="i-stat">
+            <span class="i-val">51%</span>
+            <span class="i-lab">Downtime Reduction</span>
+          </div>
+          <div class="i-stat">
+            <span class="i-val">72%</span>
+            <span class="i-lab">Cost Savings/Event</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <section id="section-civil" class="civil-section">
+    <div class="sector-container">
+      
+      <div class="sector-header">
+        <span class="hero-kicker">Sector 02</span>
+        <h2>Municipal & Civil Infrastructure</h2>
+      </div>
+
+      <div class="bento-grid">
+        <div class="bento-panel glass-panel panel-threat">
+          <div class="status-badge badge-red" style="margin-bottom: 20px;">Threat Assessment</div>
+          <h3>The Hazard & Limitation</h3>
+          <p>Confined space entry accounts for ~100 fatalities and 5,000 non-fatal incidents annually in the U.S., primarily due to toxic gas, engulfment, and oxygen deficiency.</p>
+          <p>Because mandated OSHA safety and rescue standby teams cost between $3,000 and $15,000 per event, municipalities cannot afford routine checks. As a result, sewer mains operate at just a 38% compliance rate.</p>
+        </div>
+
+        <div class="bento-panel glass-panel panel-deploy">
+          <div class="status-badge badge-yellow" style="margin-bottom: 20px;">Zero-Entry Intelligence</div>
+          <h3>HAGES Deployment</h3>
+          <p>Lowered directly into the access chamber, the Overlander-T crawler base uses its 48mm Badlands tank-tracks to conquer uneven pipe inverts, debris, and rocky gravel that stop traditional wheeled rovers. The system navigates pitch-black environments to capture high-fidelity baseline LiDAR point clouds without requiring gas clearance or a single human entry.</p>
+        </div>
+
+        <div class="bento-panel glass-panel panel-validation">
+          <div class="status-badge badge-yellow" style="margin-bottom: 20px;">Field Validation</div>
+          <h3>KBR & City of Phoenix</h3>
+          <p>Deployed in a large-diameter sewer network, HAGES mapped a priority section with zero human entry. The engineering assessment flagged structural cracking at 3 junction boxes, triggering targeted remediation rather than blind capital spending.</p>
+          
+          <div class="val-grid">
+            <div class="val-stat">
+              <span class="val-num">640m</span>
+              <span class="val-label">Continuous Scan</span>
+            </div>
+            <div class="val-stat">
+              <span class="val-num">48h</span>
+              <span class="val-label">Data Turnaround</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <section id="section-rail" class="rail-section">
+    <div class="sector-container">
+      
+      <div class="sector-header">
+        <span class="hero-kicker">Sector 03</span>
+        <h2>Subsurface Rail & Transit</h2>
+      </div>
+
+      <div class="timeline-wrapper">
+        
+        <div class="timeline-node">
+          <div class="node-panel glass-panel">
+            <h3>The Bottleneck</h3>
+            <p>For transit infrastructure, the ultimate hazard isn't toxic gas—it is asset downtime. Systems operate hundreds of kilometers of track with restricted maintenance windows from just 0200–0500 nightly. Manual crews simply cannot cover enough ground before morning service resumes.</p>
+          </div>
+        </div>
+
+        <div class="timeline-node">
+          <div class="node-panel glass-panel">
+            <h3>The Linear Limitation</h3>
+            <p>Long, linear scans are notoriously difficult for mobile-based LiDAR. Without varying structural features, standalone drones struggle to remove accumulated drift, creating a severe risk of SLAM slip resulting in scrambled data or drone crashes.</p>
+          </div>
+        </div>
+
+        <div class="timeline-node">
+          <div class="node-panel glass-panel">
+            <h3>Zig-Zag Deployment</h3>
+            <p>HAGES executes a specialized zig-zag flight pattern to capture structural vault data at high speeds while eliminating drift. The rover moves continuously down the trackbed, acting as a mobile launchpad. The UAV docks to recharge mid-mission before the brief window closes.</p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <section id="section-cta" class="cta-section">
+    <div class="cta-panel glass-panel">
+      <div class="status-badge badge-yellow" style="margin-bottom: 20px;">Data Ready for Assessment</div>
+      <h2>Deploy Operational Intelligence</h2>
+      <p>
+        Capturing the environment is only the beginning. Our tiered HAGES service packages convert raw field data into annotated engineering roadmaps and structural assessments.
+      </p>
+      <a href="services.html" class="submit-btn">View Service Packages</a>
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+
+  <script>
+    function loadComponent(id, file) {
+      fetch(file)
+        .then(response => {
+          if (!response.ok) throw new Error("Network response was not ok");
+          return response.text();
+        })
+        .then(data => document.getElementById(id).innerHTML = data)
+        .catch(error => console.error("Error loading component:", error));
+    }
+
+    // Fire the injection
+    loadComponent('header-placeholder', 'components/header.html');
+    loadComponent('footer-placeholder', 'components/footer.html');
+  </script>
+
+</body>
+</html>
