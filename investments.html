@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Investments | HAGES by MELKIN</title>
+  
+  <style>
+    /* ==========================================================================
+       MELKIN BRAND VARIABLES & GLOBAL STYLES
+       ========================================================================== */
+    :root {
+      --melkin-dark: #292929;
+      --melkin-gray: #585858;
+      --melkin-gold: #ffc815;
+      --melkin-white: #ffffff;
+      --melkin-black: #000000;
+      --data-green: #4caf50;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--melkin-dark);
+      color: var(--melkin-white);
+      font-family: "Palatino", "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    section {
+      position: relative;
+      width: 100%;
+    }
+
+    h1, h2, h3, h4, p {
+      margin: 0;
+      font-weight: normal;
+    }
+
+    /* Subtle Fade-in Animation */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-fade-up {
+      animation: fadeUp 1s ease-out forwards;
+    }
+
+    /* Glass/Bento Panel Mixin */
+    .glass-panel {
+      background: rgba(88, 88, 88, 0.15); 
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-top: 3px solid var(--melkin-gold);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      padding: 40px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      height: 100%;
+    }
+
+    .glass-panel:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+    }
+
+    /* Status Badge */
+    .status-badge {
+      display: inline-block;
+      padding: 6px 14px;
+      border: 1px solid var(--melkin-gold);
+      color: var(--melkin-gold);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    /* Section Divider */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(255, 200, 21, 0.6), transparent);
+      position: relative;
+      z-index: 10;
+      margin: 0;
+    }
+
+    .section-divider::after {
+      content: '';
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      background-color: var(--melkin-gold);
+      transform: rotate(45deg);
+      box-shadow: 0 0 15px rgba(255, 200, 21, 0.8);
+    }
+
+    /* ==========================================================================
+       HERO & PROGRESS BAR SECTION
+       ========================================================================== */
+    .invest-hero {
+      position: relative;
+      background-image: url('assets/img/cave-bg-black.png'); 
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      padding: 220px 40px 120px 40px; 
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .invest-hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(20, 20, 20, 0.90);
+      z-index: 1;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 1000px;
+      width: 100%;
+    }
+
+    .hero-kicker {
+      color: var(--melkin-gold);
+      font-size: 1.1rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: bold;
+      margin-bottom: 20px;
+      display: inline-block;
+    }
+
+    .hero-headline {
+      font-size: clamp(3rem, 5vw, 4.5rem);
+      margin-bottom: 20px;
+      color: var(--melkin-white);
+      line-height: 1.1;
+    }
+
+    .hero-subhead {
+      font-size: 1.2rem;
+      color: #cccccc;
+      margin: 0 auto 50px auto;
+      max-width: 850px;
+    }
+
+    /* THE PROGRESS BARS */
+    .funding-tracker {
+      background: rgba(41, 41, 41, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 40px;
+      backdrop-filter: blur(10px);
+      text-align: left;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+
+    .funding-tier {
+      margin-bottom: 10px;
+    }
+
+    .funding-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 15px;
+    }
+
+    @media (max-width: 650px) {
+      .funding-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .funding-amounts { text-align: left; }
+    }
+
+    .funding-round {
+      font-size: 1.5rem;
+      color: var(--melkin-white);
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .funding-amounts {
+      text-align: right;
+    }
+
+    .amount-raised {
+      font-size: 2.5rem;
+      color: var(--melkin-gold);
+      font-weight: bold;
+      line-height: 1;
+    }
+
+    .amount-target {
+      font-size: 1rem;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .progress-container {
+      width: 100%;
+      height: 24px;
+      background-color: #1a1a1a;
+      border-radius: 12px;
+      border: 1px solid #333;
+      overflow: hidden;
+      margin-bottom: 15px;
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #d4a000, var(--melkin-gold));
+      box-shadow: 0 0 20px rgba(255, 200, 21, 0.6);
+      border-radius: 12px;
+      position: relative;
+      transition: width 1s ease-in-out;
+    }
+
+    /* Striped overlay for motion effect (only visible if width > 0) */
+    .progress-fill::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; bottom: 0; right: 0;
+      background-image: linear-gradient(
+        -45deg, 
+        rgba(255, 255, 255, 0.2) 25%, 
+        transparent 25%, 
+        transparent 50%, 
+        rgba(255, 255, 255, 0.2) 50%, 
+        rgba(255, 255, 255, 0.2) 75%, 
+        transparent 75%, 
+        transparent
+      );
+      background-size: 40px 40px;
+      animation: moveStripes 2s linear infinite;
+    }
+
+    @keyframes moveStripes {
+      0% { background-position: 0 0; }
+      100% { background-position: 40px 0; }
+    }
+
+    .funding-footer {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.95rem;
+      color: #aaa;
+    }
+
+    .funding-footer span:first-child {
+      color: #ddd;
+    }
+
+    /* ==========================================================================
+       MODULE STYLES (General layout)
+       ========================================================================== */
+    .module-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+      padding: 100px 20px;
+    }
+
+    .module-header {
+      margin-bottom: 50px;
+      text-align: center;
+    }
+
+    .module-header h2 {
+      font-size: 2.8rem;
+      color: var(--melkin-white);
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      line-height: 1.2;
+    }
+
+    .module-header p {
+      font-size: 1.15rem;
+      color: #cccccc;
+      line-height: 1.7;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    /* ==========================================================================
+       SECTION 1: USE OF FUNDS & CAPEX
+       ========================================================================== */
+    .bg-financials { 
+      background-image: linear-gradient(rgba(34, 34, 34, 0.96), rgba(34, 34, 34, 0.96)), url('assets/img/lidar-scan-tunnel.png');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+
+    .financial-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+
+    @media (max-width: 950px) {
+      .financial-grid { grid-template-columns: 1fr; }
+    }
+
+    .fin-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .fin-list li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px dashed rgba(255,255,255,0.1);
+      padding: 15px 0;
+    }
+
+    .fin-list li:last-child {
+      border-bottom: none;
+    }
+
+    .fin-label {
+      font-size: 1.05rem;
+      color: #ccc;
+    }
+
+    .fin-val {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--melkin-white);
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    .fin-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 2px solid var(--melkin-gold);
+    }
+
+    .fin-total .fin-label { color: var(--melkin-gold); font-size: 1.2rem; text-transform: uppercase; font-weight: bold;}
+    .fin-total .fin-val { color: var(--melkin-gold); font-size: 1.8rem; }
+
+    .pie-placeholder {
+      margin-top: 30px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 8px;
+      padding: 30px;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .pie-desc { color: #888; font-size: 0.9rem; margin-top: 15px; }
+
+    /* ==========================================================================
+       SECTION 2: 5-YEAR VALUATION HORIZON
+       ========================================================================== */
+    .bg-horizon {
+      background-image: linear-gradient(rgba(41, 41, 41, 0.95), rgba(41, 41, 41, 0.95)), url('assets/img/mine-inspection-1.png');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+
+    .timeline-cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .t-card {
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-top: 3px solid var(--melkin-gray);
+      padding: 30px;
+      flex: 1 1 200px;
+      max-width: 240px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .t-card:hover {
+      border-top-color: var(--melkin-gold);
+      transform: translateY(-5px);
+      background: rgba(0,0,0,0.8);
+    }
+
+    .t-year {
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #888;
+      margin-bottom: 15px;
+      display: block;
+    }
+
+    .t-rev {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: var(--data-green);
+      margin-bottom: 5px;
+    }
+
+    .t-val {
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: var(--melkin-gold);
+      margin-bottom: 20px;
+    }
+
+    .t-stat {
+      font-size: 0.9rem;
+      color: #bbb;
+      border-top: 1px dashed rgba(255,255,255,0.1);
+      padding-top: 15px;
+    }
+
+    /* Highlight Year 5 */
+    .t-card.target-exit {
+      border-top-color: var(--melkin-gold);
+      background: rgba(255, 200, 21, 0.05);
+      box-shadow: 0 10px 30px rgba(255,200,21,0.15);
+      transform: scale(1.05);
+    }
+    @media (max-width: 768px) {
+      .t-card.target-exit { transform: none; }
+    }
+
+    /* ==========================================================================
+       CTA SECTION
+       ========================================================================== */
+    .cta-section {
+      padding: 120px 20px;
+      background-image: linear-gradient(rgba(41, 41, 41, 0.88), rgba(41, 41, 41, 0.88)), url('assets/img/cave-bg-orange.png');
+      background-size: cover;
+      background-position: center;
+      text-align: center;
+      position: relative;
+    }
+
+    .cta-content {
+      position: relative;
+      z-index: 2;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .cta-content h2 {
+      font-size: 2.5rem;
+      color: var(--melkin-white);
+      margin-bottom: 30px;
+    }
+
+    .submit-btn {
+      display: inline-block;
+      text-decoration: none;
+      background: var(--melkin-gold); 
+      color: var(--melkin-black); 
+      padding: 18px 35px;
+      font-size: 1.1rem; 
+      font-weight: bold;
+      text-transform: uppercase; 
+      letter-spacing: 2px; 
+      transition: all 0.3s ease; 
+    }
+
+    .submit-btn:hover { 
+      background: var(--melkin-white); 
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <div id="header-placeholder"></div>
+
+  <section class="invest-hero">
+    <div class="hero-content animate-fade-up">
+      <span class="hero-kicker">Investor Relations</span>
+      <h1 class="hero-headline">Capitalizing the Future of Subsurface Intelligence</h1>
+      <p class="hero-subhead">
+        MELKIN is raising capital in two distinct phases to operationalize the HAGES architecture, secure key pilot contracts, and initiate the transition from pure service to a scalable "Robotics as a Service" (RaaS) model.
+      </p>
+
+      <div class="funding-tracker">
+        
+        <div class="funding-tier">
+          <div class="funding-header">
+            <div class="funding-round">Phase 1: Prototype & Launch</div>
+            <div class="funding-amounts">
+              <div class="amount-raised">$0</div>
+              <div class="amount-target">Raised of $100,000 Target</div>
+            </div>
+          </div>
+          
+          <div class="progress-container">
+            <div class="progress-fill" style="width: 0%;"></div>
+          </div>
+
+          <div class="funding-footer">
+            <span>Goal: Immediate build, testing, and physical field deployment of the first integrated HAGES unit.</span>
+            <span style="color: var(--melkin-gold); font-weight: bold;">0% Funded</span>
+          </div>
+        </div>
+
+        <hr style="border: 0; border-top: 1px dashed rgba(255,255,255,0.1); margin: 35px 0;">
+
+        <div class="funding-tier">
+          <div class="funding-header">
+            <div class="funding-round">Phase 2: Full Seed Round</div>
+            <div class="funding-amounts">
+              <div class="amount-raised" style="font-size: 2rem; color: #ccc;">$0</div>
+              <div class="amount-target">Raised of $750,000 Target</div>
+            </div>
+          </div>
+          
+          <div class="progress-container">
+            <div class="progress-fill" style="width: 0%;"></div>
+          </div>
+
+          <div class="funding-footer">
+            <span>Goal: 12 months operational runway, 2x fleet procurement, hiring core engineering team, and scaling operations.</span>
+            <span style="color: #ccc; font-weight: bold;">0% Funded</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <section class="bg-financials">
+    <div class="module-container animate-fade-up" style="animation-delay: 0.1s;">
+      
+      <div class="module-header">
+        <div class="status-badge">Financial Strategy</div>
+        <h2>Unit Economics & Use of Funds</h2>
+        <p>Our capital requirements are driven by enterprise-grade hardware procurement and the highly specialized human capital needed to safely deploy in high-risk environments.</p>
+      </div>
+
+      <div class="financial-grid">
+        
+        <div class="glass-panel">
+          <h3 style="font-size: 1.5rem; color: var(--melkin-gold); margin-bottom: 20px;">HAGES 1.0 Unit CapEx</h3>
+          <p style="color: #bbb; margin-bottom: 30px;">Cost breakdown for a fully integrated, field-ready Hybrid Aerial & Ground Explorer System.</p>
+          
+          <ul class="fin-list">
+            <li>
+              <span class="fin-label">Emesent Hovermap ST-X (Sensing)</span>
+              <span class="fin-val">$68,000</span>
+            </li>
+            <li>
+              <span class="fin-label">DJI Matrice 350 RTK (Aerial Asset)</span>
+              <span class="fin-val">$16,272</span>
+            </li>
+            <li>
+              <span class="fin-label">Emesent Aura / Advance (Software)</span>
+              <span class="fin-val">$7,000</span>
+            </li>
+            <li>
+              <span class="fin-label">HEISHA DPad 500 & Custom Landing Gear</span>
+              <span class="fin-val">$4,500</span>
+            </li>
+            <li>
+              <span class="fin-label">Custom Integration (Comms, Mounts)</span>
+              <span class="fin-val">$4,500</span>
+            </li>
+            <li>
+              <span class="fin-label">goBilda Overlander-T (Ground Mobility)</span>
+              <span class="fin-val">$630</span>
+            </li>
+          </ul>
+          
+          <div class="fin-total">
+            <span class="fin-label">Total CapEx per Unit</span>
+            <span class="fin-val">$100,902</span>
+          </div>
+
+          <div class="pie-placeholder">
+            <strong style="color: var(--melkin-white);">Annual Operating Expense (OpEx): $89,500 / Unit</strong>
+            <p class="pie-desc">Includes Field Tech Labor ($65k), Maintenance & Spares ($12k), Software Licenses ($7.5k), and High-Risk Liability Insurance ($5k).</p>
+          </div>
+        </div>
+
+        <div class="glass-panel">
+          <h3 style="font-size: 1.5rem; color: var(--melkin-gold); margin-bottom: 20px;">$750,000 Seed Allocation</h3>
+          <p style="color: #bbb; margin-bottom: 30px;">Primary use of funds ensures 12 months of runway to secure initial pilot contracts and generate revenue.</p>
+          
+          <ul class="fin-list">
+            <li>
+              <span class="fin-label">Fleet Procurement (2x HAGES Units)</span>
+              <span class="fin-val">$201,804</span>
+            </li>
+            <li>
+              <span class="fin-label">Human Capital (1 Sr. Eng + 2 Techs)</span>
+              <span class="fin-val">$250,000</span>
+            </li>
+            <li>
+              <span class="fin-label">12-Month Operational Runway & Insurance</span>
+              <span class="fin-val">$180,000</span>
+            </li>
+            <li>
+              <span class="fin-label">Go-to-Market & Business Development</span>
+              <span class="fin-val">$118,196</span>
+            </li>
+          </ul>
+          
+          <div class="fin-total">
+            <span class="fin-label">Total Seed Ask</span>
+            <span class="fin-val">$750,000</span>
+          </div>
+
+          <div style="margin-top: 30px; padding: 20px; background: rgba(229, 57, 53, 0.1); border-left: 4px solid var(--data-red);">
+            <strong style="color: var(--data-red); display: block; margin-bottom: 5px;">Investor Return Proposition</strong>
+            <span style="color: #ccc; font-size: 0.95rem;">Early equity at a favorable valuation. Capitalizes on the immediate need for robotic extraction in the $6B industrial automation sector.</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <section class="bg-horizon">
+    <div class="module-container animate-fade-up" style="animation-delay: 0.2s;">
+      
+      <div class="module-header">
+        <div class="status-badge">Financial Horizon</div>
+        <h2>5-Year Scaling & Valuation Projection</h2>
+        <p>A structured growth roadmap from initial pilot service contracts to global scaling and a highly lucrative acquisition exit strategy within 5 years.</p>
+      </div>
+
+      <div class="timeline-cards">
+        
+        <div class="t-card">
+          <span class="t-year">Year 1</span>
+          <div class="t-rev">$300k Rev</div>
+          <div class="t-val">$3M Val</div>
+          <div class="t-stat">1 Active Unit<br><br>Target: 5-10 high-value mining pilot contracts.</div>
+        </div>
+
+        <div class="t-card">
+          <span class="t-year">Year 2</span>
+          <div class="t-rev">$1.2M Rev</div>
+          <div class="t-val">Series A</div>
+          <div class="t-stat">3 Active Units<br><br>Target: Securing recurring municipal utility mapping.</div>
+        </div>
+
+        <div class="t-card">
+          <span class="t-year">Year 3</span>
+          <div class="t-rev">$4.0M Rev</div>
+          <div class="t-val">$20M Val</div>
+          <div class="t-stat">8 Active Units<br><br>Target: Hybrid service + Direct sales of "HAGES Enterprise".</div>
+        </div>
+
+        <div class="t-card">
+          <span class="t-year">Year 4</span>
+          <div class="t-rev">$10M Rev</div>
+          <div class="t-val">Scale</div>
+          <div class="t-stat">20 Active Units<br><br>Target: Nationwide B2B partnerships & payload integration.</div>
+        </div>
+
+        <div class="t-card target-exit">
+          <span class="t-year" style="color: var(--melkin-gold);">Year 5 (Exit)</span>
+          <div class="t-rev">$25M Rev</div>
+          <div class="t-val" style="font-size: 1.8rem;">$150M+ Val</div>
+          <div class="t-stat" style="color: #fff;">40 Active Units<br><br>Target: Global scaling. Acquisition target (8x-12x multiple).</div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <section class="cta-section">
+    <div class="cta-content">
+      <h2>Join the next frontier of industrial robotics.</h2>
+      <p>Contact our executive team to request access to the data room, detailed financial models, and pilot deployment case studies.</p>
+      <a href="contact.html" class="submit-btn">Contact Investor Relations</a>
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+
+  <script>
+    function loadComponent(id, file) {
+      fetch(file)
+        .then(response => {
+          if (!response.ok) throw new Error("Network response was not ok");
+          return response.text();
+        })
+        .then(data => document.getElementById(id).innerHTML = data)
+        .catch(error => console.error("Error loading component:", error));
+    }
+
+    // Fire the injection
+    loadComponent('header-placeholder', 'components/header.html');
+    loadComponent('footer-placeholder', 'components/footer.html');
+  </script>
+
+</body>
+</html>
