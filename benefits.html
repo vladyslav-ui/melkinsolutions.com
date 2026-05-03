@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Benefits & ROI | HAGES by MELKIN</title>
+  
+  <style>
+    /* ==========================================================================
+       MELKIN BRAND VARIABLES & GLOBAL STYLES
+       ========================================================================== */
+    :root {
+      --melkin-dark: #292929;
+      --melkin-gray: #585858;
+      --melkin-gold: #ffc815;
+      --melkin-white: #ffffff;
+      --melkin-black: #000000;
+      
+      /* Semantic colors for financial data visualization */
+      --data-red: #e53935;
+      --data-green: #4caf50;
+      --data-teal: #00acc1;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--melkin-dark);
+      color: var(--melkin-white);
+      font-family: "Palatino", "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    section {
+      position: relative;
+      width: 100%;
+    }
+
+    h1, h2, h3, h4, p {
+      margin: 0;
+      font-weight: normal;
+    }
+
+    /* Subtle Fade-in Animation */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-fade-up {
+      animation: fadeUp 1s ease-out forwards;
+    }
+
+    /* Glass/Bento Panel Mixin */
+    .glass-panel {
+      background: rgba(88, 88, 88, 0.15); 
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-top: 3px solid var(--melkin-gold);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      padding: 40px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      height: 100%;
+    }
+
+    .glass-panel:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+    }
+
+    /* Status Badge */
+    .status-badge {
+      display: inline-block;
+      padding: 6px 14px;
+      border: 1px solid var(--melkin-gold);
+      color: var(--melkin-gold);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    /* Section Divider */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(255, 200, 21, 0.6), transparent);
+      position: relative;
+      z-index: 10;
+      margin: 0;
+    }
+
+    .section-divider::after {
+      content: '';
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      background-color: var(--melkin-gold);
+      transform: rotate(45deg);
+      box-shadow: 0 0 15px rgba(255, 200, 21, 0.8);
+    }
+
+    /* ==========================================================================
+       HERO SECTION
+       ========================================================================== */
+    .benefits-hero {
+      position: relative;
+      background-image: url('assets/img/mine-inspection-1.png'); 
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      padding: 260px 40px 120px 40px; 
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .benefits-hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(41, 41, 41, 0.88);
+      z-index: 1;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 900px;
+    }
+
+    .hero-kicker {
+      color: var(--melkin-gold);
+      font-size: 1.1rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: bold;
+      margin-bottom: 20px;
+      display: inline-block;
+    }
+
+    .hero-headline {
+      font-size: clamp(3rem, 5vw, 4.5rem);
+      margin-bottom: 25px;
+      color: var(--melkin-white);
+      line-height: 1.1;
+    }
+
+    .hero-subhead {
+      font-size: 1.2rem;
+      color: #cccccc;
+      margin: 0 auto;
+      max-width: 800px;
+    }
+
+    /* ==========================================================================
+       MODULE STYLES (General layout)
+       ========================================================================== */
+    .module-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+      padding: 100px 20px;
+    }
+
+    .module-header {
+      margin-bottom: 50px;
+      text-align: center;
+    }
+
+    .module-header h2 {
+      font-size: 2.8rem;
+      color: var(--melkin-white);
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      line-height: 1.2;
+    }
+
+    .module-header p {
+      font-size: 1.15rem;
+      color: #cccccc;
+      line-height: 1.7;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    /* ==========================================================================
+       SECTION 1: PER-EVENT ROI (Economic Model)
+       ========================================================================== */
+    .bg-economic { 
+      background-image: linear-gradient(rgba(41, 41, 41, 0.94), rgba(41, 41, 41, 0.94)), url('assets/img/mine-inspection-2.png');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+
+    .roi-top {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 50px;
+    }
+
+    .roi-card {
+      text-align: center;
+      padding: 50px 30px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(10px);
+    }
+
+    .roi-card h3 {
+      font-size: 1.2rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #aaaaaa;
+      margin-bottom: 10px;
+    }
+
+    .roi-card .big-num {
+      font-size: 5rem;
+      font-weight: bold;
+    }
+
+    .trad-num { color: var(--data-red); }
+    .hages-num { color: var(--data-green); }
+
+    .cost-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 30px;
+    }
+
+    .cost-table th, .cost-table td {
+      padding: 18px 20px;
+      text-align: left;
+      border-bottom: 1px dashed rgba(255,255,255,0.1);
+    }
+
+    .cost-table th {
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 0.9rem;
+      color: var(--melkin-gold);
+    }
+
+    .cost-table tr:last-child td {
+      border-bottom: none;
+      font-weight: bold;
+      font-size: 1.2rem;
+      border-top: 2px solid rgba(255,255,255,0.2);
+    }
+
+    .val-trad { color: var(--data-red); font-weight: bold; }
+    .val-hages { color: var(--data-green); font-weight: bold; }
+
+    /* ==========================================================================
+       SECTION 2: SHORT-TERM ROI (Decision Velocity Timeline)
+       ========================================================================== */
+    .bg-velocity {
+      background-image: linear-gradient(rgba(34, 34, 34, 0.96), rgba(34, 34, 34, 0.96)), url('assets/img/cave-bg-black.png');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+
+    .velocity-visual {
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 50px;
+      border-radius: 8px;
+    }
+
+    .timeline-row {
+      margin-bottom: 40px;
+    }
+    .timeline-row:last-child { margin-bottom: 0; }
+
+    .timeline-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .timeline-title {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: var(--melkin-white);
+    }
+
+    .timeline-cost {
+      font-size: 1.1rem;
+      color: #aaaaaa;
+    }
+
+    .timeline-bar-bg {
+      width: 100%;
+      height: 35px;
+      background: rgba(255,255,255,0.05);
+      position: relative;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .timeline-bar-fill {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      padding-left: 15px;
+      font-weight: bold;
+      color: #000;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .fill-trad { width: 100%; background: var(--data-red); }
+    .fill-hages { width: 16%; background: var(--data-green); } /* 2 days out of 12 */
+
+    .timeline-markers {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 15px;
+      padding-top: 10px;
+      border-top: 1px solid #444;
+      color: #888;
+      font-size: 0.85rem;
+    }
+
+    /* ==========================================================================
+       SECTION 3: LONG-TERM ROI (CapEx Shield)
+       ========================================================================== */
+    .bg-capex {
+      background-image: linear-gradient(rgba(41, 41, 41, 0.92), rgba(41, 41, 41, 0.92)), url('assets/img/tunnel-inspection-1.png');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+
+    .capex-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.5fr;
+      gap: 50px;
+      align-items: center;
+    }
+
+    .capex-text h3 {
+      font-size: 2rem;
+      color: var(--melkin-gold);
+      margin-bottom: 20px;
+      line-height: 1.2;
+    }
+
+    .capex-text p {
+      font-size: 1.1rem;
+      color: #ccc;
+      margin-bottom: 20px;
+    }
+
+    .capex-blocks {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .c-block {
+      background: rgba(0,0,0,0.6);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 30px;
+      border-left: 5px solid var(--melkin-gray);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .c-block.total { border-left-color: var(--melkin-white); }
+    .c-block.wasted { border-left-color: var(--data-red); }
+    .c-block.saved { border-left-color: var(--data-green); }
+
+    .c-label {
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #aaa;
+    }
+    .c-value {
+      font-size: 2.5rem;
+      font-weight: bold;
+    }
+    .c-block.total .c-value { color: var(--melkin-white); }
+    .c-block.wasted .c-value { color: var(--data-red); }
+    .c-block.saved .c-value { color: var(--data-green); }
+
+    /* ==========================================================================
+       SECTION 4: LONG-TERM ROI (Liability & Exposure Profile)
+       ========================================================================== */
+    .bg-liability {
+      background-image: linear-gradient(rgba(34, 34, 34, 0.94), rgba(34, 34, 34, 0.94)), url('assets/img/tunnel-inspection-colapse.png');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+
+    .liability-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-top: 30px;
+    }
+
+    .liability-card {
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    .card-trad {
+      border-top: 4px solid var(--data-red);
+    }
+
+    .card-hages {
+      border-top: 4px solid var(--data-green);
+    }
+
+    .liability-header {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: var(--melkin-white);
+      margin-bottom: 25px;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .liability-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      flex-grow: 1;
+    }
+
+    .liability-list li {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 25px;
+      border-bottom: 1px dashed rgba(255,255,255,0.1);
+      padding-bottom: 15px;
+    }
+
+    .liability-list li:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .l-label {
+      font-size: 0.95rem;
+      color: #aaaaaa;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .l-value {
+      font-size: 1.8rem;
+      font-weight: bold;
+      line-height: 1.2;
+    }
+
+    .card-trad .l-value { color: var(--data-red); }
+    .card-hages .l-value { color: var(--data-green); }
+
+    .liability-footer-note {
+      text-align: center;
+      margin-top: 40px;
+      padding: 20px;
+      background: rgba(255, 200, 21, 0.05);
+      border-left: 4px solid var(--melkin-gold);
+      color: #cccccc;
+      font-size: 1.05rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .roi-top, .capex-grid, .liability-grid { grid-template-columns: 1fr; }
+      .cost-table th, .cost-table td { padding: 12px 10px; font-size: 0.9rem; }
+      .roi-card .big-num { font-size: 3.5rem; }
+    }
+
+    /* ==========================================================================
+       CTA SECTION
+       ========================================================================== */
+    .cta-section {
+      padding: 120px 20px;
+      background-image: linear-gradient(rgba(41, 41, 41, 0.88), rgba(41, 41, 41, 0.88)), url('assets/img/cave-bg-orange.png');
+      background-size: cover;
+      background-position: center;
+      text-align: center;
+      position: relative;
+    }
+
+    .cta-content {
+      position: relative;
+      z-index: 2;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .cta-content h2 {
+      font-size: 2.5rem;
+      color: var(--melkin-white);
+      margin-bottom: 30px;
+    }
+
+    .submit-btn {
+      display: inline-block;
+      text-decoration: none;
+      background: var(--melkin-gold); 
+      color: var(--melkin-black); 
+      padding: 18px 35px;
+      font-size: 1.1rem; 
+      font-weight: bold;
+      text-transform: uppercase; 
+      letter-spacing: 2px; 
+      transition: all 0.3s ease; 
+    }
+
+    .submit-btn:hover { 
+      background: var(--melkin-white); 
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <div id="header-placeholder"></div>
+
+  <section class="benefits-hero">
+    <div class="hero-content animate-fade-up">
+      <span class="hero-kicker">Service Economics</span>
+      <h1 class="hero-headline">The Commercial ROI of HAGES</h1>
+      <p class="hero-subhead">
+        Replacing slow, subjective, and hazardous manual entry with automated, millimetric data capture. We optimize decision velocity, preserve capital expenditure, and eliminate human liability.
+      </p>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <section class="bg-economic">
+    <div class="module-container animate-fade-up" style="animation-delay: 0.1s;">
+      
+      <div class="module-header">
+        <div class="status-badge">Immediate Value</div>
+        <h2>72% Cost Reduction Per Event</h2>
+        <p>HAGES compresses the inspection window by over 50%, virtually eliminating the largest cost driver of subterranean assessments: prolonged asset downtime and standby rescue teams.</p>
+      </div>
+
+      <div class="roi-top">
+        <div class="roi-card">
+          <h3>Traditional Manual Inspection</h3>
+          <div class="big-num trad-num">$122,000</div>
+        </div>
+        <div class="roi-card">
+          <h3>HAGES Service Deployment</h3>
+          <div class="big-num hages-num">$34,000</div>
+        </div>
+      </div>
+
+      <div class="glass-panel" style="padding: 20px 40px;">
+        <table class="cost-table">
+          <thead>
+            <tr>
+              <th>Cost Component</th>
+              <th>Traditional Model</th>
+              <th>HAGES Architecture</th>
+              <th>Economic Driver</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Plant/Asset Downtime</td>
+              <td class="val-trad">$45,000</td>
+              <td class="val-hages">$22,000</td>
+              <td style="color: #aaa;">51% reduction; inspection window halved</td>
+            </tr>
+            <tr>
+              <td>Labor (Crew + Hours)</td>
+              <td class="val-trad">$18,000</td>
+              <td class="val-hages">$3,500</td>
+              <td style="color: #aaa;">2 operators × 1 day; zero human entry required</td>
+            </tr>
+            <tr>
+              <td>Safety & Rescue Standby</td>
+              <td class="val-trad">$12,000</td>
+              <td class="val-hages">$2,000</td>
+              <td style="color: #aaa;">OSHA rescue standby eliminated; surface monitoring only</td>
+            </tr>
+            <tr>
+              <td>Repeat Visits (Incomplete Data)</td>
+              <td class="val-trad">$14,000</td>
+              <td class="val-hages">$500</td>
+              <td style="color: #aaa;">Persistent hybrid architecture captures full layout in one shift</td>
+            </tr>
+            <tr>
+              <td>Decision Delay</td>
+              <td class="val-trad">$12,000</td>
+              <td class="val-hages">$1,500</td>
+              <td style="color: #aaa;">Near-real-time output (1-2 days) vs. standard 12-day manual transcription</td>
+            </tr>
+            <tr>
+              <td>Mobilization & Processing</td>
+              <td class="val-trad">$21,000</td>
+              <td class="val-hages">$4,500</td>
+              <td style="color: #aaa;">No scaffolding; automated LiDAR + Visual capture</td>
+            </tr>
+            <tr>
+              <td style="color: var(--melkin-gold);">TOTAL COST PER EVENT</td>
+              <td class="val-trad">$122,000</td>
+              <td class="val-hages">$34,000</td>
+              <td style="color: var(--data-green);">Total Savings: $88,000 per deployment</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <section class="bg-velocity">
+    <div class="module-container animate-fade-up" style="animation-delay: 0.2s;">
+      
+      <div class="module-header">
+        <div class="status-badge">Operational Agility</div>
+        <h2>Eliminating the Uncertainty Window</h2>
+        <p>Traditional inspections generate qualitative video logs that require weeks of manual transcription. By utilizing SLAM processing and global optimization, HAGES collapses the reporting timeline from 12 days to just 48 hours.</p>
+      </div>
+
+      <div class="glass-panel velocity-visual">
+        
+        <div class="timeline-row">
+          <div class="timeline-header">
+            <span class="timeline-title">Traditional Manual Processing</span>
+            <span class="timeline-cost" style="color: var(--data-red);">Latency Cost: $12,000</span>
+          </div>
+          <div class="timeline-bar-bg">
+            <div class="timeline-bar-fill fill-trad">12 Days of Operational Uncertainty</div>
+          </div>
+          <p style="font-size: 0.95rem; color: #888; margin-top: 10px;">Asset remains offline or operates under risk while footage is manually reviewed, transcribed, and engineered into a structural report.</p>
+        </div>
+
+        <div class="timeline-row">
+          <div class="timeline-header">
+            <span class="timeline-title">HAGES Decision Velocity</span>
+            <span class="timeline-cost" style="color: var(--data-green);">Latency Cost Eliminated</span>
+          </div>
+          <div class="timeline-bar-bg">
+            <div class="timeline-bar-fill fill-hages">48 Hours</div>
+          </div>
+          <p style="font-size: 0.95rem; color: #888; margin-top: 10px;">Automated SLAM alignment generates a survey-grade 3D Digital Twin immediately. Engineering analysis is performed directly on the point cloud, resulting in near-real-time actionable outputs.</p>
+        </div>
+
+        <div class="timeline-markers">
+          <span>Day 0 (Capture)</span>
+          <span>Day 3</span>
+          <span>Day 6</span>
+          <span>Day 9</span>
+          <span>Day 12 (Traditional Report Delivery)</span>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <section class="bg-capex">
+    <div class="module-container animate-fade-up" style="animation-delay: 0.3s;">
+      
+      <div class="module-header">
+        <div class="status-badge">Long-Term Savings</div>
+        <h2>Capital Efficiency & Data Shielding</h2>
+        <p>In large-scale municipal infrastructure projects—such as the City of Phoenix’s $130M Sanitary Sewer Rehabilitation Program—relying on subjective CCTV data historically results in severe misallocation of funds.</p>
+      </div>
+
+      <div class="capex-grid">
+        <div class="capex-text">
+          <h3>The Cost of "Bad Data"</h3>
+          <p>When engineering teams rely on 2D visual estimates to apply costly structural liners (like CIPP), an estimated 10-15% of the rehabilitation budget is misallocated to pipes that either do not need repair or are too deformed for the liner to succeed.</p>
+          <p>By deploying HAGES to capture millimetric 3D geometry (+/- 10mm accuracy), asset owners guarantee that every dollar of Capital Expenditure (CapEx) is applied exclusively to verified, high-risk defects.</p>
+        </div>
+
+        <div class="capex-blocks">
+          <div class="c-block total">
+            <span class="c-label">Total Rehabilitation Budget</span>
+            <span class="c-value">$130M</span>
+          </div>
+          <div class="c-block wasted">
+            <span class="c-label">Traditional Wasted CapEx (10% Error)</span>
+            <span class="c-value">-$13.0M</span>
+          </div>
+          <div class="c-block saved glass-panel" style="background: rgba(0,0,0,0.8); padding: 30px;">
+            <div>
+              <span class="c-label" style="color: var(--data-green);">HAGES Preserved CapEx</span>
+              <p style="font-size: 0.85rem; color: #888; margin-top: 5px;">Reclaimed via precision LiDAR targeting</p>
+            </div>
+            <span class="c-value">+$13.0M</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <section class="bg-liability">
+    <div class="module-container animate-fade-up" style="animation-delay: 0.4s;">
+      
+      <div class="module-header">
+        <div class="status-badge">Risk Management</div>
+        <h2>The Economics of Zero Exposure</h2>
+        <p>Shifting from catastrophic human liability to capped hardware risk.</p>
+      </div>
+
+      <div class="liability-grid">
+        
+        <div class="glass-panel liability-card card-trad">
+          <div class="liability-header">Manual Confined Space Entry</div>
+          <ul class="liability-list">
+            <li>
+              <span class="l-label">Personnel in Hazard Zone</span>
+              <span class="l-value">4 to 6 Workers</span>
+            </li>
+            <li>
+              <span class="l-label">Required OSHA Rescue Standby Overhead</span>
+              <span class="l-value">$12,000 per event</span>
+            </li>
+            <li>
+              <span class="l-label">Catastrophic Failure Liability</span>
+              <span class="l-value">Millions (Human Life & Legal)</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="glass-panel liability-card card-hages">
+          <div class="liability-header">HAGES Hybrid Deployment</div>
+          <ul class="liability-list">
+            <li>
+              <span class="l-label">Personnel in Hazard Zone</span>
+              <span class="l-value">0 Workers</span>
+            </li>
+            <li>
+              <span class="l-label">Required OSHA Rescue Standby Overhead</span>
+              <span class="l-value">$0 per event</span>
+            </li>
+            <li>
+              <span class="l-label">Catastrophic Failure Liability</span>
+              <span class="l-value">Capped Hardware Replacement</span>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="liability-footer-note">
+        <strong>Industry Context:</strong> U.S. industrial occupational injury costs exceed $167B annually, with roughly 100 confined-space fatalities per year. By keeping operators entirely on the surface, HAGES decouples inspection operations from extreme geotechnical and engulfment risks.
+      </div>
+
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <section class="cta-section">
+    <div class="cta-content">
+      <h2>Ready to initiate a deployment?</h2>
+      <a href="contact.html" class="submit-btn">Contact Operations</a>
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+
+  <script>
+    function loadComponent(id, file) {
+      fetch(file)
+        .then(response => {
+          if (!response.ok) throw new Error("Network response was not ok");
+          return response.text();
+        })
+        .then(data => document.getElementById(id).innerHTML = data)
+        .catch(error => console.error("Error loading component:", error));
+    }
+
+    // Fire the injection
+    loadComponent('header-placeholder', 'components/header.html');
+    loadComponent('footer-placeholder', 'components/footer.html');
+  </script>
+
+</body>
+</html>
