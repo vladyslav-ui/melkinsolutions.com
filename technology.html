@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Technology | HAGES by MELKIN</title>
+  
+  <style>
+    /* ==========================================================================
+       MELKIN BRAND VARIABLES & GLOBAL STYLES
+       ========================================================================== */
+    :root {
+      --melkin-dark: #292929;
+      --melkin-gray: #585858;
+      --melkin-gold: #ffc815;
+      --melkin-white: #ffffff;
+      --melkin-black: #000000;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--melkin-dark);
+      color: var(--melkin-white);
+      font-family: "Palatino", "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    section {
+      position: relative;
+      width: 100%;
+    }
+
+    h1, h2, h3, h4, p {
+      margin: 0;
+      font-weight: normal;
+    }
+
+    /* Subtle Fade-in Animation */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-fade-up {
+      animation: fadeUp 1s ease-out forwards;
+    }
+
+    /* Glass/Bento Panel Mixin */
+    .glass-panel {
+      background: rgba(88, 88, 88, 0.15); 
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-top: 3px solid var(--melkin-gold);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      padding: 30px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      height: 100%;
+    }
+
+    .glass-panel:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+    }
+
+    /* Status Badge */
+    .status-badge {
+      display: inline-block;
+      padding: 6px 14px;
+      border: 1px solid var(--melkin-gold);
+      color: var(--melkin-gold);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    /* Section Divider (Gradient Line with Diamond) */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(255, 200, 21, 0.6), transparent);
+      position: relative;
+      z-index: 10;
+      margin: 0;
+    }
+
+    .section-divider::after {
+      content: '';
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      background-color: var(--melkin-gold);
+      transform: rotate(45deg);
+      box-shadow: 0 0 15px rgba(255, 200, 21, 0.8);
+    }
+
+    /* ==========================================================================
+       SECTION 1: HERO
+       ========================================================================== */
+    .tech-hero {
+      position: relative;
+      /* Updated hero image utilizing the atmospheric tunnel environment */
+      background-image: url('assets/img/tunnel-bg-orange.png'); 
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      padding: 260px 40px 120px 40px; 
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .tech-hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(41, 41, 41, 0.82); /* Slightly transparent to let the orange glow through */
+      z-index: 1;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 900px;
+    }
+
+    .hero-kicker {
+      color: var(--melkin-gold);
+      font-size: 1.1rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: bold;
+      margin-bottom: 20px;
+      display: inline-block;
+    }
+
+    .hero-headline {
+      font-size: clamp(3rem, 5vw, 4.5rem);
+      margin-bottom: 25px;
+      color: var(--melkin-white);
+      line-height: 1.1;
+    }
+
+    .hero-subhead {
+      font-size: 1.2rem;
+      color: #cccccc;
+      margin: 0 auto;
+      max-width: 800px;
+    }
+
+    /* ==========================================================================
+       TECHNOLOGY MODULES (Split Design Layout)
+       ========================================================================== */
+    .tech-module {
+      padding: 100px 20px;
+      position: relative;
+    }
+
+    /* Background overrides utilizing uploaded images with heavy overlays for readability */
+    .bg-dark { 
+      background-image: linear-gradient(rgba(41, 41, 41, 0.94), rgba(41, 41, 41, 0.94)), url('assets/img/cave-bg-black.png');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+    .bg-gray { 
+      background-image: linear-gradient(rgba(34, 34, 34, 0.94), rgba(34, 34, 34, 0.94)), url('assets/img/sewer-bg-1.png');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+
+    .module-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* The new grid layout separating text and imagery */
+    .module-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .module-grid.reverse {
+      grid-template-columns: 0.9fr 1.1fr;
+    }
+
+    .module-grid.reverse .module-text {
+      order: 2;
+    }
+    
+    .module-grid.reverse .module-visual {
+      order: 1;
+    }
+
+    .module-header {
+      margin-bottom: 40px;
+    }
+
+    .module-header h2 {
+      font-size: 2.8rem;
+      color: var(--melkin-white);
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      line-height: 1.2;
+    }
+
+    .module-header p {
+      font-size: 1.15rem;
+      color: #cccccc;
+      line-height: 1.7;
+    }
+
+    /* Image Showcase formatting */
+    .module-visual {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-top: 3px solid var(--melkin-gray);
+      transition: transform 0.5s ease;
+    }
+
+    .module-visual:hover {
+      transform: scale(1.02);
+      border-top: 3px solid var(--melkin-gold);
+    }
+
+    .module-visual img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Grid for Data Points inside the Module Text Area */
+    .bento-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .bento-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .bento-item h3 {
+      font-size: 1.3rem;
+      color: var(--melkin-gold);
+      margin-bottom: 12px;
+      font-weight: bold;
+    }
+
+    .bento-item p {
+      font-size: 1rem;
+      color: #bbbbbb;
+      margin-bottom: 20px;
+      flex-grow: 1;
+      line-height: 1.5;
+    }
+
+    /* Spec List within Bento Boxes */
+    .spec-list {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 15px;
+      margin-top: auto;
+    }
+
+    .spec-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
+      padding-bottom: 8px;
+      margin-bottom: 8px;
+    }
+
+    .spec-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+      margin-bottom: 0;
+    }
+
+    .spec-label {
+      font-size: 0.8rem;
+      color: #aaaaaa;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .spec-value {
+      font-size: 0.9rem;
+      color: var(--melkin-white);
+      font-weight: bold;
+      text-align: right;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+      .module-grid, .module-grid.reverse {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+      .module-grid.reverse .module-text,
+      .module-grid.reverse .module-visual {
+        order: unset;
+      }
+      .bento-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ==========================================================================
+       CTA SECTION
+       ========================================================================== */
+    .cta-section {
+      padding: 100px 20px;
+      background-color: var(--melkin-dark);
+      text-align: center;
+    }
+
+    .cta-content {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .cta-content h2 {
+      font-size: 2.5rem;
+      color: var(--melkin-white);
+      margin-bottom: 20px;
+    }
+
+    .submit-btn {
+      display: inline-block;
+      text-decoration: none;
+      background: var(--melkin-gold); 
+      color: var(--melkin-black); 
+      padding: 18px 35px;
+      font-size: 1.1rem; 
+      font-weight: bold;
+      text-transform: uppercase; 
+      letter-spacing: 2px; 
+      transition: all 0.3s ease; 
+      margin-top: 20px;
+    }
+
+    .submit-btn:hover { 
+      background: var(--melkin-white); 
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <div id="header-placeholder"></div>
+
+  <section class="tech-hero">
+    <div class="hero-content animate-fade-up">
+      <span class="hero-kicker">Systems Engineering</span>
+      <h1 class="hero-headline">HAGES Hardware & Software</h1>
+      <p class="hero-subhead">
+        A fully integrated, multi-modal robotic network engineered to shatter the endurance wall of high-consequence underground and confined space inspection.
+      </p>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <section class="tech-module bg-dark">
+    <div class="module-container animate-fade-up" style="animation-delay: 0.1s;">
+      <div class="module-grid">
+        
+        <div class="module-text">
+          <div class="module-header">
+            <div class="status-badge">Module 01: Aerial Platform</div>
+            <h2>DJI Matrice 350 RTK</h2>
+            <p>The agility asset. We utilize the industrial-grade M350 RTK platform, heavily modified for the harsh realities of subterranean flight. Operating without GPS, this platform relies entirely on SLAM integration to navigate confined, high-risk geometries.</p>
+          </div>
+
+          <div class="bento-grid">
+            <div class="glass-panel bento-item">
+              <h3>Industrial Reliability</h3>
+              <div class="spec-list">
+                <div class="spec-row">
+                  <span class="spec-label">Ingress Protection</span>
+                  <span class="spec-value">IP55</span>
+                </div>
+                <div class="spec-row">
+                  <span class="spec-label">Max Takeoff Weight</span>
+                  <span class="spec-value">9.2 kg</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="glass-panel bento-item">
+              <h3>Custom Propulsion</h3>
+              <div class="spec-list">
+                <div class="spec-row">
+                  <span class="spec-label">Motor Architecture</span>
+                  <span class="spec-value">T-Motor MN5008 KV340</span>
+                </div>
+                <div class="spec-row">
+                  <span class="spec-label">Propellers</span>
+                  <span class="spec-value">P15×5 Carbon Fiber</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="module-visual">
+          <img src="assets/img/dji-350-rtk-3.jpg" alt="DJI Matrice 350 RTK Underground Integration">
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <section class="tech-module bg-gray">
+    <div class="module-container animate-fade-up" style="animation-delay: 0.2s;">
+      <div class="module-grid reverse">
+        
+        <div class="module-text">
+          <div class="module-header">
+            <div class="status-badge">Module 02: Ground Persistence</div>
+            <h2>goBILDA Overlander-T</h2>
+            <p>The persistent backbone of the operation. This ruggedized, tracked mobile base transports the UAV deep into the hazard zone, acting as a mobile staging ground, launchpad, and the primary energy reserve for the entire hybrid system.</p>
+          </div>
+
+          <div class="bento-grid">
+            <div class="glass-panel bento-item">
+              <h3>All-Terrain Mobility</h3>
+              <div class="spec-list">
+                <div class="spec-row">
+                  <span class="spec-label">Traction System</span>
+                  <span class="spec-value">48mm Tank-Tracks</span>
+                </div>
+                <div class="spec-row">
+                  <span class="spec-label">Payload Capacity</span>
+                  <span class="spec-value">25 lbs (11.3 kg)</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="glass-panel bento-item">
+              <h3>Energy Hub</h3>
+              <div class="spec-list">
+                <div class="spec-row">
+                  <span class="spec-label">Primary Reserve</span>
+                  <span class="spec-value">24V 30Ah LiFePO4</span>
+                </div>
+                <div class="spec-row">
+                  <span class="spec-label">Power Conversion</span>
+                  <span class="spec-value">Integrated DC-AC</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="module-visual">
+          <img src="assets/img/gobilda-overlander-t-1.jpg" alt="goBILDA Overlander-T Tracked Rover Base">
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <section class="tech-module bg-dark">
+    <div class="module-container animate-fade-up" style="animation-delay: 0.3s;">
+      <div class="module-grid">
+        
+        <div class="module-text">
+          <div class="module-header">
+            <div class="status-badge">Module 03: Docking & Recharge</div>
+            <h2>HEISHA DPad & D60</h2>
+            <p>The core architectural breakthrough of HAGES. By integrating HEISHA’s industrial charging technology onto a mobile rover, the UAV can land, secure itself, recharge, and relaunch autonomously—shattering the drone endurance wall.</p>
+          </div>
+
+          <div class="bento-grid">
+            <div class="glass-panel bento-item">
+              <h3>DPad Rover Base</h3>
+              <div class="spec-list">
+                <div class="spec-row">
+                  <span class="spec-label">Alignment</span>
+                  <span class="spec-value">Infrared Centering</span>
+                </div>
+                <div class="spec-row">
+                  <span class="spec-label">Transit Security</span>
+                  <span class="spec-value">Automated Locking Bars</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="glass-panel bento-item">
+              <h3>D60 Landing Gear</h3>
+              <div class="spec-list">
+                <div class="spec-row">
+                  <span class="spec-label">Charge Current</span>
+                  <span class="spec-value">Up to 10A (Gold)</span>
+                </div>
+                <div class="spec-row">
+                  <span class="spec-label">Fatigue Rating</span>
+                  <span class="spec-value">&ge; 5,000 Cycles</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="module-visual">
+          <img src="assets/img/heisha-dpad-2.jpg" alt="HEISHA DPad Charging Infrastructure">
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <section class="tech-module bg-gray">
+    <div class="module-container animate-fade-up" style="animation-delay: 0.4s;">
+      <div class="module-grid reverse">
+        
+        <div class="module-text">
+          <div class="module-header">
+            <div class="status-badge">Module 04: Perception & Software</div>
+            <h2>Emesent ST-X & Aura</h2>
+            <p>The intelligence engine. HAGES utilizes the Emesent ecosystem to provide GPS-denied navigation, active omnidirectional collision avoidance, and the generation of survey-grade 3D digital twins.</p>
+          </div>
+
+          <div class="bento-grid">
+            <div class="glass-panel bento-item">
+              <h3>Hovermap ST-X LiDAR</h3>
+              <div class="spec-list">
+                <div class="spec-row">
+                  <span class="spec-label">Sensing Array</span>
+                  <span class="spec-value">32 Lasers, 3 Returns</span>
+                </div>
+                <div class="spec-row">
+                  <span class="spec-label">Data Acquisition</span>
+                  <span class="spec-value">1.92M points/sec</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="glass-panel bento-item">
+              <h3>Aura Optimization</h3>
+              <div class="spec-list">
+                <div class="spec-row">
+                  <span class="spec-label">Processing</span>
+                  <span class="spec-value">Global SLAM Optimization</span>
+                </div>
+                <div class="spec-row">
+                  <span class="spec-label">Accuracy</span>
+                  <span class="spec-value">6.7mm at 1-sigma</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="module-visual">
+          <img src="assets/img/emesent-aura-3.jpg" alt="Emesent ST-X LiDAR and Aura Mapping Software">
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <section class="cta-section">
+    <div class="cta-content">
+      <h2>Ready to initiate a deployment?</h2>
+      <a href="contact.html" class="submit-btn">Contact Operations</a>
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+
+  <script>
+    function loadComponent(id, file) {
+      fetch(file)
+        .then(response => {
+          if (!response.ok) throw new Error("Network response was not ok");
+          return response.text();
+        })
+        .then(data => document.getElementById(id).innerHTML = data)
+        .catch(error => console.error("Error loading component:", error));
+    }
+
+    // Fire the injection
+    loadComponent('header-placeholder', 'components/header.html');
+    loadComponent('footer-placeholder', 'components/footer.html');
+  </script>
+
+</body>
+</html>
