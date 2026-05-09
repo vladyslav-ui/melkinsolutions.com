@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MELKIN | Underground & Confined Spaces Solutions</title>
+  
+  <style>
+    /* ==========================================================================
+       MELKIN BRAND VARIABLES & GLOBAL STYLES
+       ========================================================================== */
+    :root {
+      --melkin-dark: #292929;
+      --melkin-gray: #585858;
+      --melkin-gold: #ffc815;
+      --melkin-white: #ffffff;
+      --melkin-black: #000000;
+      --melkin-alert-red: #E53935; /* Used strictly for hazard identification */
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--melkin-dark);
+      color: var(--melkin-white);
+      font-family: "Palatino", "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    section {
+      position: relative;
+      width: 100%;
+    }
+
+    h1, h2, h3, h4, p {
+      margin: 0;
+      font-weight: normal;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    /* Subtle Fade-in Animation */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-fade-up {
+      animation: fadeUp 1s ease-out forwards;
+    }
+
+    /* Glass Panel Mixin */
+    .glass-panel {
+      background: rgba(88, 88, 88, 0.15); 
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-top: 3px solid var(--melkin-gold);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      padding: 40px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      height: 100%;
+    }
+
+    .glass-panel:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+    }
+
+    /* Status Badge */
+    .status-badge {
+      display: inline-block;
+      padding: 6px 14px;
+      border: 1px solid var(--melkin-gold);
+      color: var(--melkin-gold);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    /* Section Divider */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(255, 200, 21, 0.6), transparent);
+      position: relative;
+      z-index: 10;
+      margin: 0;
+    }
+
+    .section-divider::after {
+      content: '';
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      background-color: var(--melkin-gold);
+      transform: rotate(45deg);
+      box-shadow: 0 0 15px rgba(255, 200, 21, 0.8);
+    }
+
+    /* Buttons */
+    .submit-btn {
+      display: inline-block;
+      background: var(--melkin-gold); 
+      color: var(--melkin-black); 
+      padding: 18px 35px;
+      font-size: 1.1rem; 
+      font-weight: bold;
+      text-transform: uppercase; 
+      letter-spacing: 2px; 
+      transition: all 0.3s ease; 
+      text-align: center;
+    }
+
+    .submit-btn:hover { 
+      background: var(--melkin-white); 
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .submit-btn.outline {
+      background: transparent;
+      color: var(--melkin-white);
+      border: 2px solid var(--melkin-gray);
+    }
+
+    .submit-btn.outline:hover {
+      border-color: var(--melkin-white);
+      background: rgba(255,255,255,0.05);
+    }
+
+    /* ==========================================================================
+       HERO SECTION
+       ========================================================================== */
+    .home-hero {
+      position: relative;
+      background-image: url('assets/img/hages-1.png'); 
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      padding: 280px 40px 140px 40px; 
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      min-height: 95vh;
+    }
+
+    .home-hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(rgba(41, 41, 41, 0.75), rgba(41, 41, 41, 0.95));
+      z-index: 1;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 1000px;
+    }
+
+    .hero-kicker {
+      color: var(--melkin-gold);
+      font-size: 1.1rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: bold;
+      margin-bottom: 20px;
+      display: inline-block;
+    }
+
+    .hero-headline {
+      font-size: clamp(3rem, 6vw, 5rem);
+      margin-bottom: 30px;
+      color: var(--melkin-white);
+      line-height: 1.1;
+      text-transform: uppercase;
+    }
+
+    .hero-subhead {
+      font-size: 1.3rem;
+      color: #cccccc;
+      margin: 0 auto 40px auto;
+      max-width: 800px;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* ==========================================================================
+       MODULE STYLES (General layout)
+       ========================================================================== */
+    .module-container {
+      max-width: 1300px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+      padding: 100px 20px;
+    }
+
+    .module-header {
+      margin-bottom: 50px;
+      text-align: center;
+    }
+
+    .module-header h2 {
+      font-size: 2.8rem;
+      color: var(--melkin-white);
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      line-height: 1.2;
+    }
+
+    .module-header p {
+      font-size: 1.15rem;
+      color: #cccccc;
+      line-height: 1.7;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    /* ==========================================================================
+       SECTION 1: THE PARADIGM SHIFT
+       ========================================================================== */
+    .bg-thesis { 
+      background-image: linear-gradient(rgba(34, 34, 34, 0.94), rgba(34, 34, 34, 0.94)), url('assets/img/cave-bg-black.png');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+
+    .thesis-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 50px;
+      align-items: stretch;
+    }
+
+    .thesis-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .thesis-card h3 {
+      font-size: 2rem;
+      color: var(--melkin-white);
+      margin-bottom: 20px;
+      line-height: 1.2;
+    }
+
+    .thesis-card p {
+      font-size: 1.1rem;
+      color: #cccccc;
+      margin-bottom: 20px;
+    }
+
+    .highlight-gold {
+      color: var(--melkin-gold);
+      font-weight: bold;
+    }
+
+    /* ==========================================================================
+       SECTION 2: SYSTEM ARCHITECTURE OVERVIEW
+       ========================================================================== */
+    .bg-platform { 
+      background-image: linear-gradient(rgba(41, 41, 41, 0.92), rgba(41, 41, 41, 0.92)), url('assets/img/hages-8.png');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+
+    .bento-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+    }
+
+    .bento-panel {
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .bento-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 4px;
+      margin-bottom: 25px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .bento-panel h3 {
+      font-size: 1.5rem;
+      color: var(--melkin-gold);
+      margin-bottom: 15px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .bento-panel p {
+      font-size: 1.05rem;
+      color: #bbbbbb;
+      flex-grow: 1;
+      margin-bottom: 25px;
+    }
+
+    .bento-link {
+      color: var(--melkin-white);
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      transition: color 0.3s;
+    }
+
+    .bento-link:hover {
+      color: var(--melkin-gold);
+    }
+
+    .bento-link::after {
+      content: '→';
+      margin-left: 8px;
+    }
+
+    /* ==========================================================================
+       SECTION 3: DATA & ROI
+       ========================================================================== */
+    .bg-data {
+      background-image: linear-gradient(rgba(34, 34, 34, 0.94), rgba(34, 34, 34, 0.94)), url('assets/img/lidar-map-4.png');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      margin-top: 40px;
+    }
+
+    .stat-block {
+      background: rgba(0, 0, 0, 0.4);
+      border-left: 4px solid var(--melkin-gold);
+      padding: 30px;
+    }
+
+    .stat-val {
+      font-size: 3.5rem;
+      color: var(--melkin-white);
+      font-weight: bold;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+
+    .stat-label {
+      font-size: 1rem;
+      color: #aaaaaa;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* ==========================================================================
+       SECTION 4: INDUSTRIES
+       ========================================================================== */
+    .bg-industries {
+      background-image: linear-gradient(rgba(41, 41, 41, 0.92), rgba(41, 41, 41, 0.92)), url('assets/img/mine-inspection-1.png');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+    }
+
+    .industry-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+
+    .industry-card {
+      display: flex;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 30px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .industry-card:hover {
+      background: rgba(88, 88, 88, 0.2);
+      border-color: var(--melkin-gold);
+      transform: translateX(10px);
+    }
+
+    .industry-info h3 {
+      font-size: 1.5rem;
+      color: var(--melkin-white);
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .industry-info p {
+      color: #cccccc;
+      font-size: 1rem;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 950px) {
+      .thesis-grid, .bento-grid, .industry-list { grid-template-columns: 1fr; }
+    }
+
+    /* ==========================================================================
+       CTA SECTION
+       ========================================================================== */
+    .cta-section {
+      padding: 120px 20px;
+      background-image: linear-gradient(rgba(41, 41, 41, 0.88), rgba(41, 41, 41, 0.88)), url('assets/img/cave-bg-orange.png');
+      background-size: cover;
+      background-position: center;
+      text-align: center;
+      position: relative;
+    }
+
+    .cta-content {
+      position: relative;
+      z-index: 2;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .cta-content h2 {
+      font-size: 2.5rem;
+      color: var(--melkin-white);
+      margin-bottom: 30px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div id="header-placeholder"></div>
+
+  <section class="home-hero">
+    <div class="hero-content animate-fade-up">
+      <span class="hero-kicker">Subsurface Intelligence</span>
+      <h1 class="hero-headline">Persistent Exploration for High-Consequence Environments</h1>
+      <p class="hero-subhead">
+        MELKIN replaces hazardous manual entry with the Hybrid Aerial & Ground Explorer System (HAGES). We capture survey-grade 3D geometry in the world's most dangerous, GPS-denied spaces.
+      </p>
+      <div class="btn-group">
+        <a href="hages.html" class="submit-btn">Explore HAGES Hardware</a>
+        <a href="services.html" class="submit-btn outline">View Operational Services</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <section class="bg-thesis">
+    <div class="module-container animate-fade-up" style="animation-delay: 0.1s;">
+      
+      <div class="module-header">
+        <div class="status-badge">The Problem</div>
+        <h2>The Inspection Gap</h2>
+      </div>
+
+      <div class="thesis-grid">
+        <div class="glass-panel thesis-card">
+          <span class="status-badge" style="border-color: var(--melkin-alert-red); color: var(--melkin-alert-red); align-self: flex-start;">Lethal & Expensive</span>
+          <h3>Manual Entry is Failing</h3>
+          <p>Confined space and underground operations cost lives annually. Mandated safety protocols, rescue standby teams, and massive asset downtime push traditional inspection costs above <span class="highlight-gold">$122,000 per event</span>. As a result, critical infrastructure operates dangerously below required compliance frequencies.</p>
+        </div>
+
+        <div class="glass-panel thesis-card">
+          <span class="status-badge" style="align-self: flex-start;">The Technical Wall</span>
+          <h3>Single-Mode Robotics Fall Short</h3>
+          <p>Standalone drones are agile but hit an endurance limit at 150 meters. Standalone rovers have the battery capacity to travel deep underground but suffer severe capability loss over rough terrain and cannot inspect vertical stopes. The industry requires a persistent, integrated solution.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <section class="bg-platform">
+    <div class="module-container animate-fade-up" style="animation-delay: 0.2s;">
+      
+      <div class="module-header">
+        <div class="status-badge">The Solution</div>
+        <h2>HAGES Architecture</h2>
+        <p>A fully integrated, multi-modal robotic network engineered to shatter the endurance wall. The rover acts as a mobile base, transporting the UAV deep into the hazard zone for repeated, high-value sorties.</p>
+      </div>
+
+      <div class="bento-grid">
+        <div class="glass-panel bento-panel">
+          <img src="assets/img/gobilda-overlander-t-1.jpg" alt="Ground Mobility Segment" class="bento-img">
+          <h3>Ground Segment</h3>
+          <p>A tracked crawler base built for uneven terrain and rocky inverts. It transports the aerial asset, houses the primary computing payload, and carries a massive 24V energy reserve.</p>
+          <a href="technology.html" class="bento-link">View Tech Specs</a>
+        </div>
+
+        <div class="glass-panel bento-panel">
+          <img src="assets/img/dji-350-rtk-2.jpg" alt="Aerial Mapping Segment" class="bento-img">
+          <h3>Aerial Segment</h3>
+          <p>An industrial quadcopter modified for turbulent underground airflows. It utilizes SLAM autonomy to navigate, avoid obstacles, and map complex vertical geometries without GPS.</p>
+          <a href="technology.html" class="bento-link">View Tech Specs</a>
+        </div>
+
+        <div class="glass-panel bento-panel">
+          <img src="assets/img/hages-6.png" alt="Mid-Mission Recharge System" class="bento-img">
+          <h3>Mid-Mission Recharge</h3>
+          <p>The core breakthrough. The UAV autonomously lands on the rover, locks into place, and wirelessly recharges its batteries before launching deeper into the environment.</p>
+          <a href="hages.html" class="bento-link">Explore Integration</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <section class="bg-data">
+    <div class="module-container animate-fade-up" style="animation-delay: 0.3s;">
+      
+      <div class="module-header">
+        <div class="status-badge">Decision Velocity</div>
+        <h2>From Point Clouds to Actionable Engineering</h2>
+        <p>We do not just capture raw data. HAGES utilizes Emesent Aura processing to convert field geometry into survey-grade 3D Digital Twins, accelerating the engineering timeline.</p>
+      </div>
+
+      <div class="glass-panel" style="padding: 50px;">
+        <p style="font-size: 1.2rem; color: #cccccc; max-width: 900px;">
+          By eliminating the need for scaffolding, gas clearance, and manual video transcription, MELKIN converts prolonged operational uncertainty into immediate, millimetric precision. We deliver structural assessments, drift calculations, and annotated defect maps.
+        </p>
+
+        <div class="stats-grid">
+          <div class="stat-block">
+            <div class="stat-val">72%</div>
+            <div class="stat-label">Cost Reduction Per Event</div>
+          </div>
+          <div class="stat-block">
+            <div class="stat-val">48h</div>
+            <div class="stat-label">Data Turnaround Time</div>
+          </div>
+          <div class="stat-block">
+            <div class="stat-val">0</div>
+            <div class="stat-label">Personnel Exposed to Hazards</div>
+          </div>
+        </div>
+        
+        <div style="margin-top: 40px;">
+           <a href="benefits.html" class="submit-btn outline">Calculate Your ROI</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <section class="bg-industries">
+    <div class="module-container animate-fade-up" style="animation-delay: 0.4s;">
+      
+      <div class="module-header">
+        <div class="status-badge">Deployment Zones</div>
+        <h2>Targeting the Red Zone</h2>
+        <p>HAGES is deployed exclusively into sectors where the consequence of failure is extreme, but manual access is prohibitively expensive or lethal.</p>
+      </div>
+
+      <div class="industry-list">
+        <a href="industries.html#section-mining" class="industry-card">
+          <div class="industry-info">
+            <h3>Underground Mining</h3>
+            <p>Mapping complex stopes, active headings, and ore passes without exposing miners to ground falls or explosive gases.</p>
+          </div>
+        </a>
+
+        <a href="industries.html#section-civil" class="industry-card">
+          <div class="industry-info">
+            <h3>Municipal Sewer & Civil</h3>
+            <p>Zero-entry intelligence for large-diameter mains. Eliminating the need for confined space rescue teams and protecting CapEx budgets.</p>
+          </div>
+        </a>
+
+        <a href="industries.html#section-rail" class="industry-card">
+          <div class="industry-info">
+            <h3>Rail & Transit Tunnels</h3>
+            <p>Maximizing the brief 0200-0500 maintenance window. Rapid, linear SLAM mapping of trackbed and crown geometry.</p>
+          </div>
+        </a>
+
+        <a href="industries.html" class="industry-card">
+          <div class="industry-info">
+            <h3>Industrial Vessels & Utilities</h3>
+            <p>Navigating asbestos, high temperatures, and oxygen-deficient tanks to ensure structural integrity and compliance.</p>
+          </div>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <section class="cta-section">
+    <div class="cta-content">
+      <div class="status-badge" style="margin-bottom: 20px;">Deployment Ready</div>
+      <h2>Transition from Data to Decisions</h2>
+      <p style="margin-bottom: 40px; font-size: 1.2rem; color: #cccccc;">
+        HAGES is delivered as a turnkey service model. We handle the hardware, the deployment, and the data processing. You receive the engineering roadmap.
+      </p>
+      <div class="btn-group">
+        <a href="services.html" class="submit-btn">View Service Packages</a>
+        <a href="contact.html" class="submit-btn outline">Contact Operations</a>
+      </div>
+    </div>
+  </section>
+
+  <div id="footer-placeholder"></div>
+
+  <script>
+    function loadComponent(id, file) {
+      fetch(file)
+        .then(response => {
+          if (!response.ok) throw new Error("Network response was not ok");
+          return response.text();
+        })
+        .then(data => document.getElementById(id).innerHTML = data)
+        .catch(error => console.error("Error loading component:", error));
+    }
+
+    // Fire the injection
+    loadComponent('header-placeholder', 'components/header.html');
+    loadComponent('footer-placeholder', 'components/footer.html');
+  </script>
+
+</body>
+</html>
